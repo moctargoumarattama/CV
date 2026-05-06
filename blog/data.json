@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "Monitoring Industriel avec ESP32",
+    "excerpt": "Comment j'ai développé un système de surveillance avec capteurs DHT22/DS18B20",
+    "image": "assets/images/projet-arduino.jpg",
+    "date": "15 Mars 2024",
+    "category": "IoT"
+  },
+  {
+    "id": 2,
+    "title": "Transition Énergétique en Afrique",
+    "excerpt": "Les opportunités des énergies renouvelables pour le développement industriel",
+    "image": "assets/images/projet-energy.jpg",
+    "date": "28 Février 2024",
+    "category": "Énergie"
+  },
+  {
+    "id": 3,
+    "title": "Développement Web pour PME",
+    "excerpt": "Création d'un site vitrine pour une entreprise artisanale",
+    "image": "assets/images/projet-mcb.jpg",
+    "date": "10 Janvier 2024",
+    "category": "Web"
+  }
+]
