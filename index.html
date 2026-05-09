@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio professionnel de Moctar Goumar Attama - IoT, Industrie 4.0, energie et developpement web.">
-    <meta name="keywords" content="Moctar Goumar Attama, IoT, ESP32, Industrie 4.0, energie, portfolio professionnel, genie industriel">
+    <meta name="description" content="Portfolio professionnel de Moctar Goumar Attama - IoT, Industrie 4.0, énergie et développement web.">
+    <meta name="keywords" content="Moctar Goumar Attama, IoT, ESP32, Industrie 4.0, énergie, portfolio professionnel, génie industriel">
     <meta name="theme-color" content="#07111f">
     <title>Moctar Goumar Attama | Portfolio professionnel</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2307111f'/%3E%3Cpath d='M14 42 25 18l8 16 6-10 11 18H14Z' fill='%23d19a4a'/%3E%3Ccircle cx='48' cy='16' r='5' fill='%2337d67a'/%3E%3C/svg%3E" type="image/svg+xml">
@@ -14,7 +14,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="page-loader" id="page-loader" role="status" aria-live="polite" aria-label="Chargement du portfolio">
+        <div class="loader-badge" aria-hidden="true">
+            <span class="loader-ring"></span>
+            <span class="loader-core">MGA</span>
+        </div>
+        <p>Chargement</p>
+    </div>
     <a class="skip-link" href="#main">Aller au contenu</a>
+    <div class="page-progress" aria-hidden="true">
+        <span class="page-progress-bar"></span>
+    </div>
+    <div class="ambient-system" aria-hidden="true">
+        <span class="ambient-grid"></span>
+        <span class="ambient-scan"></span>
+        <span class="ambient-beam"></span>
+    </div>
 
     <header class="site-header" id="top">
         <nav class="nav-shell" aria-label="Navigation principale">
@@ -23,52 +38,107 @@
                 <span class="brand-text">IoT & Industrie 4.0</span>
             </a>
 
-            <button class="nav-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false">
+            <button class="nav-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-menu">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
 
+            <div class="nav-backdrop" aria-hidden="true"></div>
+
             <div class="nav-menu" id="nav-menu">
                 <a href="#about">Profil</a>
                 <a href="#projects">Projets</a>
-                <a href="#skills">Competences</a>
+                <a href="#skills">Compétences</a>
                 <a href="#contact">Contact</a>
-                <button class="theme-toggle" type="button" aria-label="Changer le theme">Mode nuit</button>
+                <button class="theme-toggle" type="button" aria-label="Changer le thème">Mode nuit</button>
             </div>
         </nav>
     </header>
+
+    <aside class="floating-summary" aria-label="Sommaire de la page">
+        <a href="#about" data-section-link="about">Profil</a>
+        <a href="#journey" data-section-link="journey">Parcours</a>
+        <a href="#certifications" data-section-link="certifications">Certifications</a>
+        <a href="#engagement" data-section-link="engagement">Leadership</a>
+        <a href="#projects" data-section-link="projects">Projets</a>
+        <a href="#skills" data-section-link="skills">Compétences</a>
+        <a href="#contact" data-section-link="contact">Contact</a>
+    </aside>
 
     <main id="main">
         <section class="hero section" id="home">
             <div class="hero-grid container">
                 <div class="hero-copy reveal">
-                    <p class="eyebrow">Portfolio professionnel - Industrie 4.0 - Energie</p>
-                    <h1>Je conçois des solutions IoT, web et energie pour les environnements industriels.</h1>
+                    <div class="signal-rail" aria-label="Compétences en mouvement">
+                        <div class="signal-track">
+                            <span>Arduino IDE</span>
+                            <span>Wokwi</span>
+                            <span>TIA Portal</span>
+                            <span>LabVIEW</span>
+                            <span>MATLAB</span>
+                            <span>AutoCAD</span>
+                            <span>CATIA</span>
+                            <span>Visual Studio Code</span>
+                            <span>Flutter</span>
+                            <span>Python</span>
+                            <span>XAMPP</span>
+                            <span>Odoo</span>
+                            <span>Sage</span>
+                            <span>MySQL</span>
+                            <span>GitHub</span>
+                            <span>Proteus</span>
+                            <span>Fritzing</span>
+                            <span>Canva</span>
+                            <span>Git</span>
+                            <span>SQLite</span>
+                            <span>PostgreSQL</span>
+                            <span>Arduino IDE</span>
+                            <span>Wokwi</span>
+                            <span>TIA Portal</span>
+                            <span>LabVIEW</span>
+                            <span>MATLAB</span>
+                            <span>AutoCAD</span>
+                            <span>CATIA</span>
+                            <span>Visual Studio Code</span>
+                            <span>Flutter</span>
+                            <span>Python</span>
+                            <span>XAMPP</span>
+                            <span>Odoo</span>
+                            <span>Sage</span>
+                            <span>MySQL</span>
+                            <span>GitHub</span>
+                            <span>Proteus</span>
+                            <span>Fritzing</span>
+                            <span>Canva</span>
+                            <span>Git</span>
+                            <span>SQLite</span>
+                            <span>PostgreSQL</span>
+                        </div>
+                    </div>
+                    <h1>Je conçois des solutions IoT, web et énergie pour l'industrie.</h1>
                     <p class="hero-lead">
-                        Eleve ingenieur en genie industriel, option transformation digitale energetique, je relie le terrain, les capteurs, les donnees et le web pour creer des systemes utiles, mesurables et durables.
+                        Élève ingénieur en génie industriel, option transformation digitale énergétique et renouvelable.
                     </p>
                     <div class="hero-actions">
-                        <a class="btn primary" href="#projects">Voir les 10 projets</a>
-                        <a class="btn ghost" href="cv_moctar_goumar_attama_v2.pdf" download>Telecharger le CV</a>
+                        <a class="btn primary" href="#projects">Voir les 20 projets</a>
+                        <a class="btn ghost" href="assets/cv_moctar_goumar_attama_v2.pdf" download>Télécharger le CV</a>
                     </div>
                     <div class="hero-metrics" aria-label="Indicateurs rapides">
                         <div>
-                            <strong>10</strong>
-                            <span>projets presentes</span>
-                        </div>
-                        <div>
-                            <strong>4</strong>
+                            <strong>5</strong>
                             <span>domaines techniques</span>
                         </div>
                         <div>
-                            <strong>2024</strong>
-                            <span>cycle ingenieur</span>
+                            <strong>4ᵉ année</strong>
+                            <span>cycle ingénieur</span>
                         </div>
                     </div>
                 </div>
 
                 <aside class="hero-card reveal" aria-label="Carte de profil">
+                    <div class="hud-ring"></div>
+                    <div class="hud-grid"></div>
                     <div class="orbit orbit-one"></div>
                     <div class="orbit orbit-two"></div>
                     <img src="assets/images/photo.jpg" alt="Portrait de Moctar Goumar Attama" class="profile-photo">
@@ -76,7 +146,7 @@
                         <span class="status-dot"></span>
                         <div>
                             <strong>Moctar Goumar Attama</strong>
-                            <p>IoT, automatisation, energie et web</p>
+                            <p>IoT, automatisation, énergie et web</p>
                         </div>
                     </div>
                 </aside>
@@ -85,263 +155,586 @@
 
         <section class="about section" id="about">
             <div class="container split-section">
-                <div class="section-heading reveal">
-                    <p class="eyebrow">Profil</p>
-                    <h2>Un profil hybride entre atelier, electronique embarquee et developpement web.</h2>
+                <div class="section-heading centered reveal">
+                    <p class="eyebrow profile-label">Profil hybride</p>
                 </div>
                 <div class="about-content reveal">
                     <p>
-                        Mon parcours part de la maintenance industrielle et evolue vers la transformation digitale: diagnostic de machines, suivi de production, ESP32, capteurs, interfaces web et solutions energetiques. Mon objectif est simple: rendre les systemes industriels plus lisibles, plus fiables et mieux connectes.
+                        Mon parcours part de l’électricité industrielle et de la maintenance, puis évolue vers la transformation digitale, l’IoT et les solutions énergétiques intelligentes et connectées.
+                        Aujourd’hui, je conçois des outils techniques mêlant terrain, données et supervision.
                     </p>
                     <div class="focus-grid">
                         <article>
                             <span>01</span>
                             <h3>Terrain industriel</h3>
-                            <p>Maintenance, diagnostic, assistance aux operations et lecture des contraintes reelles.</p>
+                            <p>Maintenance, diagnostic et électricité industrielle.</p>
                         </article>
                         <article>
                             <span>02</span>
-                            <h3>IoT et donnees</h3>
-                            <p>ESP32, capteurs, acquisition de donnees, tableaux de bord et automatisation.</p>
+                            <h3>IoT &amp; automatisation</h3>
+                            <p>ESP32, supervision et systèmes connectés.</p>
                         </article>
                         <article>
                             <span>03</span>
-                            <h3>Energie durable</h3>
-                            <p>Suivi energetique, modelisation solaire et optimisation des usages industriels.</p>
+                            <h3>Énergie & optimisation</h3>
+                            <p>Suivi énergétique et optimisation des usages.</p>
                         </article>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="journey section" aria-labelledby="journey-title">
+        <section class="journey section" id="journey" aria-labelledby="journey-title">
             <div class="container">
                 <div class="section-heading centered reveal">
-                    <p class="eyebrow">Parcours</p>
-                    <h2 id="journey-title">Formation, stages et responsabilites.</h2>
+                    <p class="eyebrow journey-label" id="journey-title">Parcours</p>
                 </div>
                 <div class="timeline reveal">
                     <article class="timeline-item">
                         <span class="timeline-date">2020</span>
                         <div>
-                            <h3>BEP Electricite Industrielle</h3>
-                            <p>Base technique en maintenance, electricite et logique industrielle.</p>
+                            <h3>BEP Électricité industrielle</h3>
+                            <p>Formation de base en électricité industrielle, câblage, maintenance et sécurité électrique.</p>
                         </div>
                     </article>
                     <article class="timeline-item">
                         <span class="timeline-date">2021</span>
                         <div>
                             <h3>Stage Sogea-Satom</h3>
-                            <p>Projet route Dosso-Bella Niger: participation aux travaux de chantier, assistance a la gestion des equipements et suivi des operations sur le terrain.</p>
+                            <p class="timeline-place">Électromécanique</p>
+                            <ul class="timeline-details">
+                                <li>Découverte du milieu industriel et BTP</li>
+                                <li>Appui aux activités de maintenance électromécanique</li>
+                                <li>Observation des équipements, procédures et règles de sécurité</li>
+                            </ul>
+                            <div class="timeline-proof">
+                                <button
+                                    class="proof-gallery-trigger"
+                                    type="button"
+                                    data-proof-gallery
+                                    data-proof-images="assets/attestation.png|Attestation de stage Sogea-Satom;assets/UPTA5364.JPG|Attestation terrain Sogea-Satom"
+                                >
+                                    Voir mes attestations
+                                </button>
+                            </div>
                         </div>
                     </article>
                     <article class="timeline-item">
                         <span class="timeline-date">2022</span>
                         <div>
-                            <h3>Bac Pro Maintenance Industrielle</h3>
-                            <p>Formation pratique sur diagnostic, reparation et intervention en atelier.</p>
+                            <h3>Bac Pro Maintenance industrielle</h3>
+                            <p>Formation pratique en diagnostic, réparation et intervention en atelier.</p>
                         </div>
                     </article>
                     <article class="timeline-item">
-                        <span class="timeline-date">2022</span>
+                        <span class="timeline-date">2022 - 2024</span>
                         <div>
-                            <h3>Cycle ingenieur en genie industriel</h3>
-                            <p>Formation en cours depuis 2022 a l'Ecole Sup MTI, Rabat, option transformation digitale energetique. 4e annee terminee, derniere annee prevue en 2026-2027, diplome prevu en 2027.</p>
+                            <h3>Bac+2 - Transformation digitale de l'industrie</h3>
+                            <p>Formation axée sur la digitalisation des procédés industriels, l’automatisation, l’IoT et les outils numériques appliqués à la production.</p>
                         </div>
                     </article>
                     <article class="timeline-item">
                         <span class="timeline-date">2024</span>
                         <div>
                             <h3>Stage NIGELEC</h3>
-                            <p>Maintenance electrique industrielle, diagnostic, suivi des lignes et collaboration terrain.</p>
+                            <p>Maintenance électrique industrielle, diagnostic, suivi des lignes et collaboration terrain.</p>
+                            <div class="timeline-proof">
+                                <button
+                                    class="proof-gallery-trigger"
+                                    type="button"
+                                    data-proof-gallery
+                                    data-proof-images="assets/nigelec.jpeg|Attestation de stage NIGELEC"
+                                >
+                                    Voir attestation
+                                </button>
+                            </div>
                         </div>
                     </article>
-                    <article class="timeline-item">
-                        <span class="timeline-date">2025</span>
+                    <article class="timeline-item timeline-cycle">
+                        <span class="timeline-date cycle-date" aria-label="Cycle ingénieur de 2024 à 2027">
+                            <span>2024</span>
+                            <span class="cycle-spinner" aria-hidden="true"></span>
+                            <span>2027</span>
+                        </span>
                         <div>
-                            <h3>Leadership associatif</h3>
-                            <p>Secretaire general adjoint de la communaute nigerienne a Rabat.</p>
+                            <h3>Cycle ingénieur en génie industriel</h3>
+                            <p>Option transformation digitale énergétique et renouvelable. 4e année validée, diplôme prévu en 2027.</p>
                         </div>
                     </article>
                 </div>
+            </div>
+        </section>
+
+        <section class="certifications section" id="certifications" aria-labelledby="certifications-title">
+            <div class="container">
+                <div class="section-heading centered reveal">
+                    <p class="eyebrow certifications-label" id="certifications-title">Certifications</p>
+                </div>
+                <article class="certification-card reveal">
+                    <span class="certification-date">2024</span>
+                    <div>
+                        <h3>Certificat en intelligence émotionnelle et situationnelle</h3>
+                        <p>
+                            Formation axée sur la gestion des émotions, la communication,
+                            la prise de décision et l’adaptation aux situations professionnelles.
+                        </p>
+                        <div class="timeline-proof">
+                            <button
+                                class="proof-gallery-trigger"
+                                type="button"
+                                data-proof-gallery
+                                data-proof-title="Certificat en intelligence émotionnelle et situationnelle"
+                                data-proof-images="assets/certificat.jpeg|Certificat en intelligence émotionnelle et situationnelle"
+                            >
+                                Voir certificat
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="engagement section" id="engagement" aria-labelledby="engagement-title">
+            <div class="container">
+                <div class="section-heading centered reveal">
+                    <p class="eyebrow engagement-label" id="engagement-title">Engagement / Leadership</p>
+                </div>
+                <article class="engagement-card reveal">
+                    <span class="engagement-date">2025</span>
+                    <div>
+                        <h3>Leadership associatif</h3>
+                        <p>
+                            Secrétaire général adjoint de la communauté nigérienne à Rabat.
+                            Coordination, communication, organisation et représentation.
+                        </p>
+                        <div class="timeline-proof">
+                            <button
+                                class="proof-gallery-trigger"
+                                type="button"
+                                data-proof-gallery
+                                data-proof-title="Leadership associatif"
+                                data-proof-images="assets/image.png|Attestation de leadership associatif"
+                            >
+                                Voir attestation
+                            </button>
+                        </div>
+                    </div>
+                </article>
             </div>
         </section>
 
         <section class="projects section" id="projects">
             <div class="container">
                 <div class="section-heading centered reveal">
-                    <p class="eyebrow">Mes realisations</p>
-                    <h2>10 projets, stages et prototypes qui racontent mon parcours technique.</h2>
-                    <p class="section-subtitle">J'ai reuni ici mes experiences en maintenance, IoT, developpement web, energie et interventions terrain.</p>
+                    <p class="eyebrow">Mes réalisations</p>
+                    <h2>20 projets techniques.</h2>
                 </div>
-
                 <div class="project-filters reveal" aria-label="Filtrer les projets">
                     <button class="filter-btn active" type="button" data-filter="all">Tous</button>
                     <button class="filter-btn" type="button" data-filter="iot">IoT</button>
                     <button class="filter-btn" type="button" data-filter="industry">Industrie</button>
+                    <button class="filter-btn" type="button" data-filter="ai">IA</button>
                     <button class="filter-btn" type="button" data-filter="web">Web</button>
-                    <button class="filter-btn" type="button" data-filter="energy">Energie</button>
+                    <button class="filter-btn" type="button" data-filter="energy">Énergie</button>
                 </div>
+                <p class="project-count reveal" id="project-count" aria-live="polite">20 projets affichés</p>
 
                 <div class="projects-grid">
-                    <article class="project-card featured reveal" data-category="iot">
+                    <article class="project-card featured reveal" data-category="iot industry">
                         <div class="project-image">
-                            <img src="assets/images/projet-arduino.jpg" alt="Projet ESP32 de monitoring industriel" loading="lazy" decoding="async">
+                            <div class="project-carousel" aria-label="Images du projet drone, robot et impression 3D">
+                                <img src="assets/images/robot.jpeg" alt="Prototype de robot embarqué" loading="lazy" decoding="async">
+                                <img src="assets/images/drone.jpeg" alt="Prototype de drone embarqué" loading="lazy" decoding="async">
+                                <img src="assets/images/appreil.jpeg" alt="Appareil électronique embarqué" loading="lazy" decoding="async">
+                                <img src="assets/images/imprimante.jpeg" alt="Imprimante 3D utilisée pour les prototypes" loading="lazy" decoding="async">
+                            </div>
                             <span class="project-badge">IoT</span>
                         </div>
                         <div class="project-body">
-                            <p class="project-kicker">ESP32 - Capteurs - Dashboard</p>
-                            <h3>Monitoring industriel avec ESP32</h3>
-                            <p>J'ai concu ce projet pour suivre des mesures de temperature et d'etat machine depuis une interface web simple.</p>
-                            <div class="project-tags"><span>ESP32</span><span>DHT22</span><span>Flask</span><span>SQLite</span></div>
+                            <p class="project-kicker">Drone - Robot - Impression 3D</p>
+                            <h3>Systèmes embarqués drone et robot</h3>
+                            <p>Prototype autour de l'électronique embarquée, du drone, du robot et de pièces réalisées par impression 3D.</p>
+                            <div class="project-tags"><span>IoT</span><span>Embarqué</span><span>Impression 3D</span></div>
+                        </div>
+                    </article>
+
+                    <article class="project-card reveal" data-category="iot industry">
+                        <div class="project-image">
+                            <img src="assets/images/projet-energy.jpg" alt="Interface du projet supervision industrielle" loading="lazy" decoding="async">
+                            <span class="project-badge">Industrie</span>
+                        </div>
+                        <a class="project-card-link" href="https://github.com/moctargoumarattama/supervision-industrielle" target="_blank" rel="noreferrer" aria-label="Voir le projet supervision industrielle sur GitHub"></a>
+                        <div class="project-body">
+                            <p class="project-kicker">supervision-industrielle</p>
+                            <h3>Supervision industrielle</h3>
+                            <p>Interface pour rendre les données terrain visibles et exploitables.</p>
+                            <div class="project-tags"><span>Industrie</span><span>IoT</span><span>Supervision</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/supervision-industrielle" target="_blank" rel="noreferrer">GitHub</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card reveal" data-category="industry iot">
+                        <div class="project-image">
+                            <video class="project-video-frame project-video-local" src="assets/remplissage%20de%20cuive.mp4" muted loop playsinline preload="none" aria-label="Vidéo du prototype de remplissage de cuve"></video>
+                            <span class="project-badge">Industrie</span>
+                        </div>
+                        <div class="project-body">
+                            <p class="project-kicker">Automate programmable - Cuve</p>
+                            <h3>Remplissage automatique de cuve</h3>
+                            <p>Prototype industriel avec capteur de niveau, automate programmable et moteur asynchrone pour piloter le remplissage.</p>
+                            <div class="project-tags"><span>Automate</span><span>Capteur niveau</span><span>Moteur AC</span></div>
+                        </div>
+                    </article>
+
+                    <article class="project-card reveal" data-category="industry iot">
+                        <div class="project-image">
+                            <video class="project-video-frame project-video-local" src="assets/feu%20tricolore%20.mp4" muted loop playsinline preload="none" aria-label="Vidéo du prototype de feu tricolore programmable"></video>
+                            <span class="project-badge">Industrie</span>
+                        </div>
+                        <div class="project-body">
+                            <p class="project-kicker">Automate programmable - Signalisation</p>
+                            <h3>Prototype de feu tricolore</h3>
+                            <p>Séquence de circulation pilotée par automate programmable pour gérer les phases rouge, orange et verte.</p>
+                            <div class="project-tags"><span>Automate</span><span>Signalisation</span><span>Séquençage</span></div>
+                        </div>
+                    </article>
+
+                    <article class="project-card reveal" data-category="energy industry">
+                        <div class="project-image">
+                            <video class="project-video-frame project-video-local" src="assets/HT%20BT.mp4" muted loop playsinline preload="none" aria-label="Vidéo d'un poste de transformation HT BT à Niamey"></video>
+                            <span class="project-badge">Énergie</span>
+                        </div>
+                        <div class="project-body">
+                            <p class="project-kicker">Poste HT/BT - Niamey</p>
+                            <h3>Maintenance de transformateurs électriques</h3>
+                            <p>Observation et maintenance d'équipements sur poste de transformation HT/BT à Niamey pendant mon stage terrain.</p>
+                            <div class="project-tags"><span>HT/BT</span><span>Transformateur</span><span>Maintenance</span></div>
+                        </div>
+                    </article>
+
+                    <article class="project-card reveal" data-category="energy industry">
+                        <div class="project-image">
+                            <div class="project-carousel project-carousel-three" aria-label="Images d'électricité bâtiment">
+                                <img src="assets/bat%201.jpeg" alt="Installation électrique bâtiment" loading="lazy" decoding="async">
+                                <img src="assets/BAT%202.jpeg" alt="Câblage et équipement électrique bâtiment" loading="lazy" decoding="async">
+                                <img src="assets/BAT%203.jpeg" alt="Armoire et installation électrique bâtiment" loading="lazy" decoding="async">
+                            </div>
+                            <span class="project-badge">Énergie</span>
+                        </div>
+                        <div class="project-body">
+                            <p class="project-kicker">Électricité bâtiment</p>
+                            <h3>Installations électriques BT</h3>
+                            <p>Allumage simple/double, va-et-vient, ventilation, climatiseur, armoire électrique et équipements domestiques.</p>
+                            <div class="project-tags"><span>Câblage</span><span>BT</span><span>Armoire</span></div>
                         </div>
                     </article>
 
                     <article class="project-card reveal" data-category="industry">
                         <div class="project-image">
-                            <img src="assets/images/projet-mcb.jpg" alt="Diagnostic industriel et intervention technique" loading="lazy" decoding="async">
-                            <span class="project-badge">Terrain</span>
+                            <div class="project-carousel project-carousel-five" aria-label="Images de fabrication mécanique">
+                                <img src="assets/frais.jpeg" alt="Travail sur fraiseuse" loading="lazy" decoding="async">
+                                <img src="assets/machine.jpeg" alt="Machine d'atelier mécanique" loading="lazy" decoding="async">
+                                <img src="assets/piece.jpeg" alt="Pièce mécanique usinée" loading="lazy" decoding="async">
+                                <img src="assets/grille.jpeg" alt="Grille et pièce de fabrication mécanique" loading="lazy" decoding="async">
+                                <img src="assets/tour.jpeg" alt="Machine à tour" loading="lazy" decoding="async">
+                            </div>
+                            <span class="project-badge">Industrie</span>
                         </div>
                         <div class="project-body">
-                            <p class="project-kicker">Maintenance - Diagnostic</p>
-                            <h3>Diagnostic et reparation machines</h3>
-                            <p>J'ai travaille sur l'analyse de pannes, la verification electrique et les operations de remise en service.</p>
-                            <div class="project-tags"><span>Maintenance</span><span>Electricite</span><span>Mecanique</span></div>
+                            <p class="project-kicker">Fabrication mécanique</p>
+                            <h3>Fraiseuse et machine à tour</h3>
+                            <p>Maîtrise des bases d'usinage: fraisage, tournage, lecture de pièces et travail en atelier.</p>
+                            <div class="project-tags"><span>Fraiseuse</span><span>Tour</span><span>Atelier</span></div>
                         </div>
                     </article>
 
-                    <article class="project-card reveal" data-category="industry">
+                    <article class="project-card reveal" data-category="ai web">
                         <div class="project-image">
-                            <img src="assets/images/projet-energy.jpg" alt="Suivi industriel et production" loading="lazy" decoding="async">
-                            <span class="project-badge">Production</span>
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/15WITb4EvSnO-ugWs72_j7_t5WoGqEK8C/preview" title="Démo vidéo du projet assistant personnel IA" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <span class="project-badge">IA</span>
                         </div>
+                        <a class="project-card-link" href="https://drive.google.com/file/d/15WITb4EvSnO-ugWs72_j7_t5WoGqEK8C/view?usp=drive_link" target="_blank" rel="noreferrer" aria-label="Voir la démo vidéo du projet assistant personnel IA"></a>
                         <div class="project-body">
-                            <p class="project-kicker">Stage - Operations</p>
-                            <h3>Suivi des lignes de production</h3>
-                            <p>J'ai suivi les operations de production pour comprendre les flux, les contraintes et les points d'amelioration.</p>
-                            <div class="project-tags"><span>Production</span><span>Suivi</span><span>Qualite</span></div>
+                            <p class="project-kicker">moctar-jarvis-assistant</p>
+                            <h3>Assistant personnel IA</h3>
+                            <p>Assistant numérique pour automatiser les demandes et centraliser les interactions utiles.</p>
+                            <div class="project-tags"><span>IA</span><span>Assistant</span><span>Automatisation</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/moctar-jarvis-assistant" target="_blank" rel="noreferrer">GitHub</a>
+                                <a class="project-btn demo" href="https://drive.google.com/file/d/15WITb4EvSnO-ugWs72_j7_t5WoGqEK8C/view?usp=drive_link" target="_blank" rel="noreferrer">Voir le projet</a>
+                            </div>
                         </div>
                     </article>
 
-                    <article class="project-card reveal" data-category="industry">
+                    <article class="project-card reveal" data-category="iot energy">
                         <div class="project-image">
-                            <img src="assets/images/projet-mcb.jpg" alt="Assistance technique machine industrielle" loading="lazy" decoding="async">
-                            <span class="project-badge">Support</span>
+                            <img src="assets/images/SUPERVISION%20.png" alt="Prototype ESP32 du projet iot energy esp32 monitoring" loading="lazy" decoding="async">
+                            <span class="project-badge">IoT</span>
                         </div>
+                        <a class="project-card-link" href="https://github.com/moctargoumarattama/iot-energy-esp32-monitoring" target="_blank" rel="noreferrer" aria-label="Voir le projet iot energy esp32 monitoring sur GitHub"></a>
                         <div class="project-body">
-                            <p class="project-kicker">Ajustage - Assistance</p>
-                            <h3>Assistance aux ajusteurs machines</h3>
-                            <p>J'ai accompagne les techniciens pendant les reglages, les controles et les interventions sur machines.</p>
-                            <div class="project-tags"><span>Reglage</span><span>Atelier</span><span>Machines</span></div>
+                            <p class="project-kicker">iot-energy-esp32-monitoring</p>
+                            <h3>Monitoring énergie ESP32</h3>
+                            <p>Prototype IoT reliant mesures énergétiques et suivi embarqué.</p>
+                            <div class="project-tags"><span>ESP32</span><span>IoT</span><span>Énergie</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/iot-energy-esp32-monitoring" target="_blank" rel="noreferrer">GitHub</a>
+                            </div>
                         </div>
                     </article>
 
-                    <article class="project-card reveal" data-category="industry">
+                    <article class="project-card reveal" data-category="ai web">
                         <div class="project-image">
-                            <img src="assets/images/projet-energy.jpg" alt="Suivi des operations terrain" loading="lazy" decoding="async">
-                            <span class="project-badge">Ops</span>
+                            <img src="assets/images/NEURO.png" alt="Interface du projet neurovision" loading="lazy" decoding="async">
+                            <span class="project-badge">IA</span>
                         </div>
+                        <a class="project-card-link" href="https://github.com/moctargoumarattama/neurovision" target="_blank" rel="noreferrer" aria-label="Voir le projet neurovision sur GitHub"></a>
                         <div class="project-body">
-                            <p class="project-kicker">Organisation - Terrain</p>
-                            <h3>Suivi des operations sur le terrain</h3>
-                            <p>J'ai appris a structurer les informations du terrain et a preparer des comptes rendus utiles aux equipes.</p>
-                            <div class="project-tags"><span>Operations</span><span>Reporting</span><span>Securite</span></div>
+                            <p class="project-kicker">neurovision</p>
+                            <h3>Projet vision intelligente</h3>
+                            <p>Analyse visuelle et interfaces intelligentes pour exploiter des données image.</p>
+                            <div class="project-tags"><span>IA</span><span>Vision</span><span>Web</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/neurovision" target="_blank" rel="noreferrer">GitHub</a>
+                            </div>
                         </div>
                     </article>
 
                     <article class="project-card reveal" data-category="web">
                         <div class="project-image">
-                            <img src="assets/images/projet-mcb.jpg" alt="Site scolaire CSP La Responsabilite Niger" loading="lazy" decoding="async">
+                            <img src="assets/images/noor.jpeg" alt="Interface du projet NOOR EXPRESS" loading="lazy" decoding="async">
                             <span class="project-badge">Web</span>
                         </div>
+                        <a class="project-card-link" href="https://github.com/moctargoumarattama/NOOR-EXPRESS" target="_blank" rel="noreferrer" aria-label="Voir le projet NOOR EXPRESS sur GitHub"></a>
                         <div class="project-body">
-                            <p class="project-kicker">Site web - Education</p>
-                            <h3>CSP La Responsabilite au Niger</h3>
-                            <p>J'ai structure une presence web claire pour un etablissement educatif, avec contenu organise et affichage responsive.</p>
-                            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Responsive</span></div>
+                            <p class="project-kicker">NOOR EXPRESS</p>
+                            <h3>Application de mobilité à Niamey</h3>
+                            <p>Solution type Uber ou InDrive pour réserver une course, connecter passagers et chauffeurs, et suivre les trajets à Niamey.</p>
+                            <div class="project-tags"><span>Web</span><span>Mobilité</span><span>Niamey</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/NOOR-EXPRESS" target="_blank" rel="noreferrer">GitHub</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card reveal" data-category="web">
+                        <div class="project-image">
+                            <img src="assets/images/TV.png" alt="Interface du projet SuiviSeriesTV" loading="lazy" decoding="async">
+                            <span class="project-badge">Web</span>
+                        </div>
+                        <a class="project-card-link" href="https://github.com/moctargoumarattama/SuiviSeriesTV" target="_blank" rel="noreferrer" aria-label="Voir le projet SuiviSeriesTV sur GitHub"></a>
+                        <div class="project-body">
+                            <p class="project-kicker">SuiviSeriesTV</p>
+                            <h3>Suivi de séries TV</h3>
+                            <p>Organise les séries, suit l'avancement et retrouve les contenus rapidement.</p>
+                            <div class="project-tags"><span>Web</span><span>UI</span><span>Suivi</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/SuiviSeriesTV" target="_blank" rel="noreferrer">GitHub</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card reveal" data-category="web">
+                        <div class="project-image">
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1I5lTm7ab47GrjCwa_nCitSe3T5vi9u7l/preview" title="Démo vidéo du projet labeeb" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <span class="project-badge">Web</span>
+                        </div>
+                        <a class="project-card-link" href="https://drive.google.com/file/d/1I5lTm7ab47GrjCwa_nCitSe3T5vi9u7l/view?usp=drive_link" target="_blank" rel="noreferrer" aria-label="Voir la démo vidéo du projet labeeb"></a>
+                        <div class="project-body">
+                            <p class="project-kicker">labeeb</p>
+                            <h3>Apprentissage de l'arabe</h3>
+                            <p>Application éducative inspirée de Duolingo pour apprendre l'arabe avec des exercices interactifs.</p>
+                            <div class="project-tags"><span>Éducation</span><span>Arabe</span><span>Interactif</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/EDUMANAGE-V2" target="_blank" rel="noreferrer">GitHub</a>
+                                <a class="project-btn demo" href="https://drive.google.com/file/d/1I5lTm7ab47GrjCwa_nCitSe3T5vi9u7l/view?usp=drive_link" target="_blank" rel="noreferrer">Voir le projet</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card reveal" data-category="web">
+                        <div class="project-image">
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/11mJfC-4h5bftRiJORl3BYOBe3a4ef1I3/preview" title="Démo vidéo du projet mutiecole" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <span class="project-badge">Web</span>
+                        </div>
+                        <a class="project-card-link" href="https://drive.google.com/file/d/11mJfC-4h5bftRiJORl3BYOBe3a4ef1I3/view?usp=drive_link" target="_blank" rel="noreferrer" aria-label="Voir la démo vidéo du projet mutiecole"></a>
+                        <div class="project-body">
+                            <p class="project-kicker">mutiecole</p>
+                            <h3>Plateforme multi-école</h3>
+                            <p>Solution pour centraliser les données scolaires: absences, professeurs, élèves, notes et parents.</p>
+                            <div class="project-tags"><span>Éducation</span><span>Multi-école</span><span>Gestion</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/EDUMANAGE" target="_blank" rel="noreferrer">GitHub</a>
+                                <a class="project-btn demo" href="https://drive.google.com/file/d/11mJfC-4h5bftRiJORl3BYOBe3a4ef1I3/view?usp=drive_link" target="_blank" rel="noreferrer">Voir le projet</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card reveal" data-category="web">
+                        <div class="project-image">
+                            <img src="assets/images/babamarket-produit.jpeg" alt="Aperçu du site Baba Market" loading="lazy" decoding="async">
+                            <span class="project-badge">Web</span>
+                        </div>
+                        <a class="project-card-link" href="https://www.babamarket.ma/" target="_blank" rel="noreferrer" aria-label="Voir la démo Baba Market"></a>
+                        <div class="project-body">
+                            <p class="project-kicker">baba-marketplace</p>
+                            <h3>Marketplace e-commerce</h3>
+                            <p>Vente en ligne avec logique marketplace, catalogue et parcours utilisateur.</p>
+                            <div class="project-tags"><span>Marketplace</span><span>E-commerce</span><span>Web</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/baba-marketplace" target="_blank" rel="noreferrer">GitHub</a>
+                                <a class="project-btn demo" href="https://www.babamarket.ma/" target="_blank" rel="noreferrer">Voir le projet</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card reveal" data-category="web">
+                        <div class="project-image">
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1bqQ_v14UK5rNPb1xF_CG3rM2MYZf4Ger/preview" title="Démo vidéo du projet baba marketplace livraison" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <span class="project-badge">Web</span>
+                        </div>
+                        <a class="project-card-link" href="https://drive.google.com/file/d/1bqQ_v14UK5rNPb1xF_CG3rM2MYZf4Ger/view?usp=drive_link" target="_blank" rel="noreferrer" aria-label="Voir la démo du projet baba marketplace livraison"></a>
+                        <div class="project-body">
+                            <p class="project-kicker">baba-marketplace-livraison</p>
+                            <h3>Module de livraison</h3>
+                            <p>Module dédié aux livraisons et au suivi des commandes marketplace.</p>
+                            <div class="project-tags"><span>Livraison</span><span>Suivi</span><span>Web</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/baba-marketplace-livraison" target="_blank" rel="noreferrer">GitHub</a>
+                                <a class="project-btn demo" href="https://drive.google.com/file/d/1bqQ_v14UK5rNPb1xF_CG3rM2MYZf4Ger/view?usp=drive_link" target="_blank" rel="noreferrer">Voir le projet</a>
+                            </div>
                         </div>
                     </article>
 
                     <article class="project-card reveal" data-category="energy">
                         <div class="project-image">
-                            <img src="assets/images/projet-energy.jpg" alt="Etude energetique solaire" loading="lazy" decoding="async">
-                            <span class="project-badge">Energie</span>
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1qUNlDuknuEftyr6XXaBnroXVWG_7v79F/preview" title="Démo vidéo du projet monitoring energy" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <span class="project-badge">Énergie</span>
                         </div>
+                        <a class="project-card-link" href="https://drive.google.com/file/d/1qUNlDuknuEftyr6XXaBnroXVWG_7v79F/view?usp=drive_link" target="_blank" rel="noreferrer" aria-label="Voir la démo vidéo du projet monitoring energy"></a>
                         <div class="project-body">
-                            <p class="project-kicker">Solaire - Simulation</p>
-                            <h3>Modelisation energetique solaire</h3>
-                            <p>J'ai travaille sur l'estimation de production et l'analyse de besoins pour imaginer un scenario solaire industriel.</p>
-                            <div class="project-tags"><span>Solaire</span><span>Python</span><span>Analyse</span></div>
+                            <p class="project-kicker">monitoring-energy</p>
+                            <h3>Monitoring énergétique</h3>
+                            <p>Suivi des données d'énergie, visualisation des mesures et analyse de consommation.</p>
+                            <div class="project-tags"><span>Énergie</span><span>Dashboard</span><span>Analyse</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/monitoring-energy" target="_blank" rel="noreferrer">GitHub</a>
+                                <a class="project-btn demo" href="https://drive.google.com/file/d/1qUNlDuknuEftyr6XXaBnroXVWG_7v79F/view?usp=drive_link" target="_blank" rel="noreferrer">Voir le projet</a>
+                            </div>
                         </div>
                     </article>
 
-                    <article class="project-card reveal" data-category="web iot">
+                    <article class="project-card reveal" data-category="web">
                         <div class="project-image">
-                            <img src="assets/images/projet-arduino.jpg" alt="Application web de donnees capteurs" loading="lazy" decoding="async">
-                            <span class="project-badge">Data</span>
+                            <img src="assets/images/touri.png" alt="Interface du projet de tourisme médical" loading="lazy" decoding="async">
+                            <span class="project-badge">Web</span>
                         </div>
+                        <a class="project-card-link" href="https://github.com/moctargoumarattama/medical_tourism_app" target="_blank" rel="noreferrer" aria-label="Voir le projet de tourisme médical sur GitHub"></a>
                         <div class="project-body">
-                            <p class="project-kicker">Flask - Base de donnees</p>
-                            <h3>Application Flask pour donnees capteurs</h3>
-                            <p>J'ai pose les bases d'une interface pour consulter des mesures, historiser les donnees et preparer un dashboard.</p>
-                            <div class="project-tags"><span>Flask</span><span>SQLite</span><span>Chart.js</span></div>
+                            <p class="project-kicker">medical_tourism_app</p>
+                            <h3>Application de tourisme médical</h3>
+                            <p>Application web pour le parcours patient, les services médicaux et les demandes.</p>
+                            <div class="project-tags"><span>Santé</span><span>Tourisme</span><span>Web</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/medical_tourism_app" target="_blank" rel="noreferrer">GitHub</a>
+                            </div>
                         </div>
                     </article>
 
-                    <article class="project-card reveal" data-category="iot energy industry">
+                    <article class="project-card reveal" data-category="web">
                         <div class="project-image">
-                            <img src="assets/images/projet-energy.jpg" alt="Automatisation industrielle station de pompage" loading="lazy" decoding="async">
-                            <span class="project-badge">Auto</span>
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1DJADUc6Brb25py3tvoyZc4FeohRy05oi/preview" title="Démo vidéo du projet immobilier Delnova" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <span class="project-badge">Web</span>
                         </div>
+                        <a class="project-card-link" href="https://drive.google.com/file/d/1DJADUc6Brb25py3tvoyZc4FeohRy05oi/view?usp=drive_link" target="_blank" rel="noreferrer" aria-label="Voir la démo vidéo du projet immobilier"></a>
                         <div class="project-body">
-                            <p class="project-kicker">Automatisation - Energie</p>
-                            <h3>Station de pompage automatisee</h3>
-                            <p>J'ai imagine une logique de controle avec capteurs, relais et supervision pour automatiser une station de pompage.</p>
-                            <div class="project-tags"><span>Relais</span><span>Capteurs</span><span>Controle</span></div>
+                            <p class="project-kicker">delnova-imo-complet</p>
+                            <h3>Plateforme immobilière</h3>
+                            <p>Projet immobilier pour présenter, organiser et gérer annonces ou services.</p>
+                            <div class="project-tags"><span>Immobilier</span><span>Web</span><span>Gestion</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/delnova-imo-complet" target="_blank" rel="noreferrer">GitHub</a>
+                                <a class="project-btn demo" href="https://drive.google.com/file/d/1DJADUc6Brb25py3tvoyZc4FeohRy05oi/view?usp=drive_link" target="_blank" rel="noreferrer">Voir le projet</a>
+                            </div>
                         </div>
                     </article>
 
-                    <article class="project-card reserved reveal" data-category="energy iot web">
-                        <div class="project-image reserved-visual" aria-hidden="true">
-                            <span>Prototype 2026</span>
+                    <article class="project-card reveal" data-category="web">
+                        <div class="project-image">
+                            <img src="assets/images/projet-mcb.jpg" alt="Interface du site CSP La Responsabilité" loading="lazy" decoding="async">
+                            <span class="project-badge">Web</span>
                         </div>
+                        <a class="project-card-link" href="https://csp-la-responsablite.netlify.app/" target="_blank" rel="noreferrer" aria-label="Voir le site CSP La Responsabilité"></a>
                         <div class="project-body">
-                            <p class="project-kicker">Projet en cours</p>
-                            <h3>Prototype industriel en developpement</h3>
-                            <p>Documentation en cours pour un prototype oriente IoT, energie ou supervision industrielle.</p>
-                            <div class="project-tags"><span>Prototype</span><span>Portfolio</span><span>2026</span></div>
+                            <p class="project-kicker">csp-la-responsabilite</p>
+                            <h3>CSP La Responsabilité</h3>
+                            <p>Site d'école privée à Niamey pour présenter l'établissement et les infos essentielles.</p>
+                            <div class="project-tags"><span>Éducation</span><span>Niamey</span><span>Niger</span></div>
+                            <div class="project-actions">
+                                <a class="project-btn demo" href="https://csp-la-responsablite.netlify.app/" target="_blank" rel="noreferrer">Voir le projet</a>
+                            </div>
                         </div>
                     </article>
                 </div>
+                <button class="projects-more" id="projects-more" type="button" hidden>Voir 7 projets de plus</button>
             </div>
         </section>
 
         <section class="skills section" id="skills">
             <div class="container">
                 <div class="section-heading centered reveal">
-                    <p class="eyebrow">Competences</p>
-                    <h2>Mes competences techniques principales.</h2>
+                    <p class="eyebrow skills-label">Compétences</p>
                 </div>
                 <div class="skills-grid reveal">
                     <article class="skill-card">
-                        <h3>IoT et systemes embarques</h3>
-                        <p>ESP32, Arduino, capteurs, relais, OLED, acquisition et transmission de donnees.</p>
-                        <div class="skill-pills"><span>ESP32</span><span>Arduino</span><span>C++</span><span>Wokwi</span></div>
+                        <span class="skill-index">01</span>
+                        <h3>IoT &amp; systèmes embarqués</h3>
+                        <p>Prototypage connecté, capteurs et acquisition de données.</p>
+                        <div class="skill-pills"><span>ESP32</span><span>Arduino</span><span>Capteurs</span><span>Acquisition</span></div>
                     </article>
                     <article class="skill-card">
-                        <h3>Developpement web</h3>
-                        <p>Interfaces responsives, sites vitrines, applications simples et tableaux de bord techniques.</p>
-                        <div class="skill-pills"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Flask</span></div>
+                        <span class="skill-index">02</span>
+                        <h3>Industrie &amp; automatisation</h3>
+                        <p>Logique industrielle, maintenance et suivi de production.</p>
+                        <div class="skill-pills"><span>TIA Portal</span><span>Automates PLC</span><span>API industriels</span><span>GMAO</span><span>GPAO</span><span>Maintenance</span></div>
                     </article>
                     <article class="skill-card">
-                        <h3>Industrie et maintenance</h3>
-                        <p>Diagnostic, electricite industrielle, mecanique, suivi operations et securite terrain.</p>
-                        <div class="skill-pills"><span>Diagnostic</span><span>Production</span><span>Maintenance</span></div>
+                        <span class="skill-index">03</span>
+                        <h3>Énergie HT/BT</h3>
+                        <p>Systèmes électriques, solaire et énergie industrielle.</p>
+                        <div class="skill-pills"><span>HT/BT</span><span>Solaire</span><span>Monitoring</span><span>Dimensionnement</span></div>
                     </article>
                     <article class="skill-card">
-                        <h3>Energie et optimisation</h3>
-                        <p>Systemes energetiques industriels, solaire, suivi de consommation et sensibilite durable.</p>
-                        <div class="skill-pills"><span>Solaire</span><span>Efficacite</span><span>Analyse</span></div>
+                        <span class="skill-index">04</span>
+                        <h3>Développement &amp; supervision</h3>
+                        <p>Interfaces, APIs et dashboards pour systèmes connectés.</p>
+                        <div class="skill-pills"><span>Python</span><span>Flutter</span><span>Go</span><span>API</span><span>XAMPP</span><span>VS Code</span><span>GitHub</span></div>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-index">05</span>
+                        <h3>IA et données</h3>
+                        <p>Analyse et exploitation des données techniques.</p>
+                        <div class="skill-pills"><span>Python</span><span>Données</span><span>Vision IA</span><span>Analyse</span></div>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-index">06</span>
+                        <h3>CAO / Simulation / Analyse</h3>
+                        <p>Conception, modélisation et analyse technique.</p>
+                        <div class="skill-pills"><span>AutoCAD</span><span>CATIA</span><span>MATLAB</span><span>LabVIEW</span></div>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-index">07</span>
+                        <h3>Fabrication mécanique</h3>
+                        <p>Atelier, maintenance mécanique et machines-outils industrielles.</p>
+                        <div class="skill-pills"><span>Usinage</span><span>3D</span><span>Pièces</span><span>Tour</span><span>Fraiseuse</span></div>
+                    </article>
+                    <article class="skill-card">
+                        <span class="skill-index">08</span>
+                        <h3>Gestion &amp; ERP</h3>
+                        <p>Bureautique, gestion d'entreprise et outils ERP.</p>
+                        <div class="skill-pills"><span>Excel</span><span>Word</span><span>Sage</span><span>Odoo</span><span>ERP</span></div>
                     </article>
                 </div>
             </div>
@@ -349,38 +742,62 @@
 
         <section class="contact section" id="contact">
             <div class="container contact-grid">
-                <div class="section-heading reveal">
+                <div class="section-heading centered reveal">
                     <p class="eyebrow">Contact</p>
-                    <h2>Disponible pour stages, collaborations et missions techniques.</h2>
-                    <p class="section-subtitle left">Disponible pour collaborations, stages, missions techniques et projets a impact industriel.</p>
+                    <h2 class="contact-title"><span>Parlons projet.</span></h2>
+                    <p class="section-subtitle left">Disponible pour projets IoT, énergie et systèmes connectés.</p>
                     <div class="contact-actions">
-                        <a class="btn primary" href="mailto:moctargoumarattama@gmail.com">Envoyer un email</a>
-                        <a class="btn ghost" href="tel:+21277010264">Appeler</a>
+                        <a class="contact-link email" href="mailto:moctargoumarattama@gmail.com">
+                            <span>EMAIL</span>
+                            <strong>Entrer en contact</strong>
+                        </a>
+                        <a class="contact-link linkedin" href="https://www.linkedin.com/in/goumar-attama-moctar-468930256?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noreferrer">
+                            <span>LINKEDIN</span>
+                            <strong>Profil LinkedIn</strong>
+                        </a>
+                        <a class="contact-link cv" href="assets/cv_moctar_goumar_attama_v2.pdf" download>
+                            <span>CV</span>
+                            <strong>Télécharger le CV</strong>
+                        </a>
                     </div>
                 </div>
 
                 <div class="contact-card reveal">
-                    <h3>Coordonnees</h3>
+                    <h3>Coordonnées</h3>
                     <ul class="contact-list">
-                        <li><span>Email</span><a href="mailto:moctargoumarattama@gmail.com">moctargoumarattama@gmail.com</a></li>
-                        <li><span>Telephone</span><a href="tel:+21277010264">+212 77010264</a></li>
+                        <li class="contact-email">
+                            <span>Email</span>
+                            <div class="copy-field">
+                                <a href="mailto:moctargoumarattama@gmail.com">moctargoumarattama@gmail.com</a>
+                                <button class="copy-contact" type="button" data-copy="moctargoumarattama@gmail.com" aria-label="Copier l'adresse email">Copier</button>
+                            </div>
+                        </li>
+                        <li class="contact-phone">
+                            <span>Téléphone</span>
+                            <div class="copy-field">
+                                <a href="tel:+21277010264">+212 77010264</a>
+                                <button class="copy-contact" type="button" data-copy="+212 77010264" aria-label="Copier le numéro de téléphone">Copier</button>
+                            </div>
+                        </li>
                         <li><span>Localisation</span><strong>Rabat, Maroc</strong></li>
-                        <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/goumar-attama-moctar-468930256" target="_blank" rel="noreferrer">Profil LinkedIn</a></li>
-                        <li><span>CV</span><a href="cv_moctar_goumar_attama_v2.pdf" download>Telecharger le CV complet</a></li>
                     </ul>
                 </div>
             </div>
         </section>
     </main>
 
+    <button class="quick-top" type="button" aria-label="Retour rapide en haut" aria-hidden="true" tabindex="-1">
+        <span aria-hidden="true">↑</span>
+        <strong>Haut</strong>
+    </button>
+
     <footer class="site-footer">
         <div class="container footer-grid">
-            <p><strong>MGA</strong> - Portfolio professionnel, IoT, Industrie 4.0 et energie.</p>
-            <p>&copy; <span id="current-year">2026</span> Moctar Goumar Attama. Tous droits reserves.</p>
+            <p><strong>MGA</strong> - Portfolio IoT, Industrie 4.0 et énergie.</p>
+            <p>&copy; <span id="current-year">2026</span> Moctar Goumar Attama. Tous droits réservés.</p>
         </div>
     </footer>
 
     <script src="script.js"></script>
 </body>
 </html>
-

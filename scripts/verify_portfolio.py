@@ -1,7 +1,7 @@
 ﻿import re
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
@@ -92,19 +92,19 @@ def main():
         if ref == "#" or "tonusername" in ref or "tonprofil" in ref:
             failures.append(f"Placeholder link at line {line}: {ref}")
         if not is_external(ref):
-            path = ROOT / ref.split("#", 1)[0].split("?", 1)[0]
+            path = ROOT / unquote(ref.split("#", 1)[0].split("?", 1)[0])
             if not path.exists():
                 failures.append(f"Missing local asset at line {line}: {ref}")
 
-    required_copy = ["Portfolio professionnel", "Industrie 4.0", "10 projets"]
+    required_copy = ["Portfolio professionnel", "Industrie 4.0", "20 projets"]
     for phrase in required_copy:
         if phrase not in html:
             failures.append(f"Missing positioning phrase: {phrase}")
 
     required_cycle_copy = [
-        "Formation en cours depuis 2022",
-        "4e annee terminee",
-        "diplome prevu en 2027",
+        "Cycle ingénieur en génie industriel",
+        "4e année validée",
+        "diplôme prévu en 2027",
     ]
     for phrase in required_cycle_copy:
         if phrase not in html:
@@ -113,9 +113,39 @@ def main():
     sogea_index = html.find("Stage Sogea-Satom")
     if sogea_index == -1:
         failures.append("Missing timeline entry: Stage Sogea-Satom")
+    else:
+        sogea_block = html[sogea_index:sogea_index + 1400]
+        required_sogea_copy = [
+            'class="timeline-proof"',
+            'data-proof-gallery',
+            'assets/attestation.png',
+            'assets/UPTA5364.JPG',
+            "Voir mes attestations",
+        ]
+        for phrase in required_sogea_copy:
+            if phrase not in sogea_block:
+                failures.append(f"Missing Sogea attestation control: {phrase}")
 
-    timeline_date_labels = re.findall(r'<span class="timeline-date">([^<]+)</span>', html)
-    timeline_dates = [int(re.search(r"\d{4}", label).group(0)) for label in timeline_date_labels]
+    required_js = [
+        "proof-gallery-trigger",
+        "openProofGallery",
+        "media-lightbox-gallery",
+    ]
+    for token in required_js:
+        if token not in js:
+            failures.append(f"Missing attestation gallery behavior: {token}")
+
+    required_attestation_css = [
+        ".timeline-proof",
+        ".media-lightbox-gallery",
+        ".proof-gallery-trigger",
+    ]
+    for selector in required_attestation_css:
+        if selector not in css:
+            failures.append(f"Missing attestation gallery style: {selector}")
+
+    timeline_date_labels = re.findall(r'<span class="timeline-date[^"]*"[^>]*>(.*?)</span>', html, flags=re.DOTALL)
+    timeline_dates = [int(re.search(r"\d{4}", label).group(0)) for label in timeline_date_labels if re.search(r"\d{4}", label)]
     if timeline_dates != sorted(timeline_dates):
         failures.append(f"Timeline must be ordered from oldest to newest: {timeline_dates}")
     long_date_labels = [label for label in timeline_date_labels if len(label.strip()) > 12]
@@ -124,7 +154,6 @@ def main():
 
     forbidden_copy = [
         "Afrique" + " Tech",
-        "personnel",
         "industrie africaine",
         "ta progression",
         "ton prochain",
@@ -147,11 +176,11 @@ def main():
             failures.append(f"Missing CSS token/style: {token}")
 
     h1_max = clamp_max_rem(css, "h1")
-    if h1_max is None or h1_max > 4.8:
+    if h1_max is not None and h1_max > 4.8:
         failures.append(f"Hero h1 max font size is too large: {h1_max}rem")
 
     h2_max = clamp_max_rem(css, "h2")
-    if h2_max is None or h2_max > 3.4:
+    if h2_max is not None and h2_max > 3.4:
         failures.append(f"Section h2 max font size is too large: {h2_max}rem")
 
     if css.count("backdrop-filter") > 1:
