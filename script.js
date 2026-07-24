@@ -448,7 +448,9 @@
   function getActiveMedia(projectImage) {
     const carousel = projectImage.querySelector(".project-carousel");
     if (carousel) {
-      const slides = carousel.querySelectorAll("img");
+      const slides = Array.from(carousel.children).filter(function (slide) {
+        return slide.matches("img, video, iframe");
+      });
       const activeIndex = Number(carousel.dataset.activeIndex || 0);
       return slides[activeIndex] || slides[0] || null;
     }
@@ -470,7 +472,7 @@
       preview.alt = caption;
     } else if (tagName === "video") {
       preview = document.createElement("video");
-      preview.src = media.currentSrc || media.getAttribute("src");
+      preview.src = media.currentSrc || media.getAttribute("src") || media.dataset.src || "";
       preview.controls = true;
       preview.autoplay = true;
       preview.loop = true;
@@ -524,11 +526,23 @@
 
     items.forEach(function (item) {
       const figure = document.createElement("figure");
-      const image = new Image();
-      image.src = item.src;
-      image.alt = item.caption || "Attestation";
-      image.className = "media-lightbox-media";
-      figure.appendChild(image);
+      const isPdf = /\.pdf($|[?#])/i.test(item.src);
+      let media = null;
+
+      if (isPdf) {
+        media = document.createElement("iframe");
+        media.src = item.src;
+        media.title = item.caption || "Aperçu de l'attestation";
+        media.loading = "lazy";
+        media.className = "media-lightbox-media";
+      } else {
+        media = new Image();
+        media.src = item.src;
+        media.alt = item.caption || "Attestation";
+        media.className = "media-lightbox-media";
+      }
+
+      figure.appendChild(media);
 
       if (item.caption) {
         const caption = document.createElement("figcaption");
@@ -576,7 +590,9 @@
   }
 
   carousels.forEach(function (carousel) {
-    const slides = Array.from(carousel.querySelectorAll("img"));
+    const slides = Array.from(carousel.children).filter(function (slide) {
+      return slide.matches("img, video, iframe");
+    });
     const projectImage = carousel.closest(".project-image");
     if (!projectImage || slides.length < 2) return;
 
@@ -586,6 +602,14 @@
 
     carousel.classList.add("is-enhanced");
     carousel.dataset.activeIndex = "0";
+    carousel.style.width = slides.length * 100 + "%";
+
+    slides.forEach(function (slide) {
+      slide.style.flex = "0 0 " + step + "%";
+      slide.style.width = step + "%";
+      slide.style.height = "100%";
+      slide.style.display = "block";
+    });
 
     const controls = document.createElement("div");
     controls.className = "project-carousel-controls";
@@ -745,8 +769,15 @@
   const projectVideos = document.querySelectorAll(".project-video-local");
 
   if (projectVideos.length) {
+    function ensureVideoSource(video) {
+      if (!video || video.src || !video.dataset.src) return;
+      video.src = video.dataset.src;
+      video.load();
+    }
+
     function setVideoState(video, shouldPlay) {
       if (shouldPlay && !reduceMotion) {
+        ensureVideoSource(video);
         video.play().catch(function () {});
       } else {
         video.pause();
@@ -768,6 +799,7 @@
       });
     } else {
       projectVideos.forEach(function (video) {
+        ensureVideoSource(video);
         setVideoState(video, true);
       });
     }

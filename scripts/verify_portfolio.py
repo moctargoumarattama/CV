@@ -96,7 +96,7 @@ def main():
             if not path.exists():
                 failures.append(f"Missing local asset at line {line}: {ref}")
 
-    required_copy = ["Portfolio professionnel", "Industrie 4.0", "20 projets"]
+    required_copy = ["Portfolio professionnel", "Industrie 4.0", "21 projets"]
     for phrase in required_copy:
         if phrase not in html:
             failures.append(f"Missing positioning phrase: {phrase}")

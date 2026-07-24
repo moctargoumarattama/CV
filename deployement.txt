@@ -1,0 +1,97 @@
+Oui, c’est fait. On voit bien :
+
+```text
+Deploys from GitHub
+Production: main@HEAD Building
+```
+
+Donc maintenant ton site Netlify est connecté à GitHub.
+
+La prochaine fois, tu ne touches plus au glisser-déposer Netlify. Tu fais seulement ça dans ton terminal :
+
+```bash
+cd C:\Users\hp\Desktop\CV
+git status
+git add .
+git commit -m "update portfolio"
+git push origin main
+```
+
+Après le `git push`, Netlify détecte automatiquement le changement sur GitHub et redéploie ton site.
+
+Méthode complète à chaque modification :
+
+```text
+1. Tu modifies ton site dans VS Code
+2. Tu testes localement avec index.html
+3. Tu ouvres le terminal dans C:\Users\hp\Desktop\CV
+4. Tu fais git status
+5. Tu fais git add .
+6. Tu fais git commit -m "message clair"
+7. Tu fais git push origin main
+8. Netlify met à jour le site tout seul
+```
+
+Exemples de messages de commit :
+
+```bash
+git commit -m "update parcours section"
+git commit -m "add certificates"
+git commit -m "improve mobile design"
+git commit -m "update projects images"
+```
+
+Point important : attends toujours que Netlify finisse le statut **Building / Deploying**. Quand tu vois **Published**, ton site public est à jour.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Oui, exactement. La prochaine fois, après tes modifications locales, tu fais :
+
+```bash
+cd C:\Users\hp\Desktop\CV
+git status
+git add .
+git commit -m "update portfolio"
+git push origin main
+```
+
+Ensuite Netlify va redéployer automatiquement ton site.
+
+Petite règle importante : si GitHub a été modifié ailleurs avant ton `push`, tu peux avoir encore l’erreur `non-fast-forward`. Dans ce cas seulement, tu fais :
+
+```bash
+git pull --rebase origin main
+git push origin main
+```
+
+Donc ton workflow normal :
+
+```bash
+cd C:\Users\hp\Desktop\CV
+git status
+git add .
+git commit -m "update portfolio"
+git push origin main
+```
+
+Et si erreur de retard GitHub :
+
+```bash
+git pull --rebase origin main
+git push origin main
+```
+
