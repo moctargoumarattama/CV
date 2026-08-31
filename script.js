@@ -4,6 +4,7 @@
   const navMenu = document.querySelector(".nav-menu");
   const navBackdrop = document.querySelector(".nav-backdrop");
   const themeToggle = document.querySelector(".theme-toggle");
+  const themeLabel = themeToggle ? themeToggle.querySelector(".theme-label") : null;
   const year = document.getElementById("current-year");
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const quickTop = document.querySelector(".quick-top");
@@ -19,13 +20,13 @@
       loaderHidden = true;
 
       const elapsed = performance.now() - loaderStart;
-      const delay = Math.max(0, 450 - elapsed);
+      const delay = Math.max(0, 300 - elapsed);
 
       window.setTimeout(function () {
         pageLoader.classList.add("is-hidden");
         window.setTimeout(function () {
           pageLoader.remove();
-        }, 560);
+        }, 340);
       }, delay);
     }
 
@@ -33,24 +34,32 @@
       hidePageLoader();
     } else {
       window.addEventListener("load", hidePageLoader, { once: true });
-      window.setTimeout(hidePageLoader, 4500);
+      window.setTimeout(hidePageLoader, 2800);
     }
   }
 
   function setTheme(theme) {
     if (theme === "light") {
       root.setAttribute("data-theme", "light");
-      if (themeMeta) themeMeta.setAttribute("content", "#f4f8f1");
-      if (themeToggle) themeToggle.textContent = "Mode nuit";
+      if (themeMeta) themeMeta.setAttribute("content", "#f4f8fb");
+      if (themeLabel) themeLabel.textContent = "Mode nuit";
+      else if (themeToggle) themeToggle.textContent = "Mode nuit";
+      if (themeToggle) themeToggle.setAttribute("aria-label", "Activer le mode nuit");
     } else {
       root.removeAttribute("data-theme");
-      if (themeMeta) themeMeta.setAttribute("content", "#07111f");
-      if (themeToggle) themeToggle.textContent = "Mode clair";
+      if (themeMeta) themeMeta.setAttribute("content", "#0b1b24");
+      if (themeLabel) themeLabel.textContent = "Mode clair";
+      else if (themeToggle) themeToggle.textContent = "Mode clair";
+      if (themeToggle) themeToggle.setAttribute("aria-label", "Activer le mode clair");
     }
     localStorage.setItem("portfolio-theme", theme);
   }
 
-  const savedTheme = localStorage.getItem("portfolio-theme") || "dark";
+  const themeVersion = "solar-premium-v1";
+  const savedTheme = localStorage.getItem("portfolio-theme-version") === themeVersion
+    ? localStorage.getItem("portfolio-theme") || "light"
+    : "light";
+  localStorage.setItem("portfolio-theme-version", themeVersion);
   setTheme(savedTheme);
 
   if (year) {
@@ -207,6 +216,10 @@
       const threshold = Math.min(720, window.innerHeight * 0.72);
       const shouldShow = window.scrollY > threshold;
 
+      if (!shouldShow && document.activeElement === quickTop) {
+        quickTop.blur();
+      }
+
       quickTop.classList.toggle("is-visible", shouldShow);
       quickTop.setAttribute("aria-hidden", String(!shouldShow));
       quickTop.tabIndex = shouldShow ? 0 : -1;
@@ -249,7 +262,11 @@
   });
 
   const filterButtons = document.querySelectorAll(".filter-btn");
-  const projectCards = document.querySelectorAll(".project-card");
+  const projectCards = Array.from(document.querySelectorAll(".project-card")).sort(function (first, second) {
+    const firstPriority = Number(first.dataset.priority || 999);
+    const secondPriority = Number(second.dataset.priority || 999);
+    return firstPriority - secondPriority;
+  });
   const projectCount = document.getElementById("project-count");
   const projectsMore = document.getElementById("projects-more");
   const summaryLinks = document.querySelectorAll("[data-section-link]");
@@ -257,7 +274,6 @@
   const canObserve = "IntersectionObserver" in window;
   const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const reduceMotion = reduceMotionQuery.matches;
-  const mobileProjectsQuery = window.matchMedia("(max-width: 760px)");
   const mobileProjectBatchSize = 7;
   let activeProjectFilter = "all";
   let visibleProjectLimit = mobileProjectBatchSize;
@@ -287,6 +303,47 @@
     return filter === "all" || categories.includes(filter);
   }
 
+  function getMatchingProjectCards() {
+    return Array.from(projectCards).filter(function (card) {
+      return projectMatchesFilter(card, activeProjectFilter);
+    });
+  }
+
+  function scrollToProjectBatch(target) {
+    if (!target) return;
+
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        const offset = 92;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? "auto" : "smooth" });
+      });
+    });
+  }
+
+  function animateProjectBatch(cards) {
+    if (reduceMotion) return;
+
+    cards.forEach(function (card, index) {
+      const delay = Math.min(index * 38, 230);
+      card.style.setProperty("--batch-delay", delay + "ms");
+      card.classList.remove("batch-entering");
+
+      window.requestAnimationFrame(function () {
+        card.classList.add("batch-entering");
+      });
+
+      card.addEventListener(
+        "animationend",
+        function () {
+          card.classList.remove("batch-entering");
+          card.style.removeProperty("--batch-delay");
+        },
+        { once: true }
+      );
+    });
+  }
+
   function updateProjectCount(filter, matchingCount) {
     if (!projectCount) return;
 
@@ -309,22 +366,26 @@
   }
 
   function updateProjectLimit() {
-    const matchingCards = Array.from(projectCards).filter(function (card) {
-      return projectMatchesFilter(card, activeProjectFilter);
-    });
-    const shouldLimit = mobileProjectsQuery.matches && matchingCards.length > visibleProjectLimit;
+    const matchingCards = getMatchingProjectCards();
 
     projectCards.forEach(function (card) {
       const matchesFilter = projectMatchesFilter(card, activeProjectFilter);
-      const isBeyondMobileLimit = mobileProjectsQuery.matches && matchingCards.indexOf(card) >= visibleProjectLimit;
-      card.hidden = !matchesFilter || isBeyondMobileLimit;
+      const isBeyondProjectLimit = matchingCards.indexOf(card) >= visibleProjectLimit;
+      card.hidden = !matchesFilter || isBeyondProjectLimit;
     });
 
     if (projectsMore) {
-      const canToggle = mobileProjectsQuery.matches && matchingCards.length > mobileProjectBatchSize;
+      const canToggle = matchingCards.length > mobileProjectBatchSize;
       const hasMore = matchingCards.length > visibleProjectLimit;
       projectsMore.hidden = !canToggle;
-      projectsMore.textContent = hasMore ? "Voir 7 projets de plus" : "Réduire la liste";
+      projectsMore.textContent = hasMore
+        ? "Voir " + mobileProjectBatchSize + " projets de plus"
+        : "Réduire la liste";
+      projectsMore.dataset.state = hasMore ? "more" : "collapse";
+      projectsMore.setAttribute(
+        "aria-label",
+        hasMore ? "Afficher 7 projets de plus" : "Réduire la liste des projets"
+      );
       projectsMore.setAttribute("aria-expanded", String(!hasMore));
     }
 
@@ -347,20 +408,24 @@
 
   if (projectsMore) {
     projectsMore.addEventListener("click", function () {
-      const matchingCount = Array.from(projectCards).filter(function (card) {
-        return projectMatchesFilter(card, activeProjectFilter);
-      }).length;
-      const hasMore = matchingCount > visibleProjectLimit;
+      const matchingCards = getMatchingProjectCards();
+      const previousLimit = visibleProjectLimit;
+      const hasMore = matchingCards.length > visibleProjectLimit;
 
       visibleProjectLimit = hasMore ? visibleProjectLimit + mobileProjectBatchSize : mobileProjectBatchSize;
       updateProjectLimit();
-    });
-  }
 
-  if (typeof mobileProjectsQuery.addEventListener === "function") {
-    mobileProjectsQuery.addEventListener("change", updateProjectLimit);
-  } else if (typeof mobileProjectsQuery.addListener === "function") {
-    mobileProjectsQuery.addListener(updateProjectLimit);
+      if (hasMore) {
+        const nextProjectBatch = matchingCards.slice(previousLimit, visibleProjectLimit);
+        nextProjectBatch.forEach(function (card) {
+          card.classList.add("visible");
+        });
+        animateProjectBatch(nextProjectBatch);
+        scrollToProjectBatch(matchingCards[previousLimit]);
+      } else {
+        scrollToProjectBatch(document.getElementById("projects"));
+      }
+    });
   }
 
   updateProjectLimit();
@@ -482,7 +547,6 @@
       preview.src = media.getAttribute("src") || media.dataset.src || "";
       preview.title = media.getAttribute("title") || "Apercu video";
       preview.allow = media.getAttribute("allow") || "autoplay; fullscreen";
-      preview.allowFullscreen = true;
     }
 
     if (!preview) return;
@@ -844,19 +908,40 @@
     }
 
     if (canObserve && sectionMap.size) {
-      const sectionObserver = new IntersectionObserver(
-        function (entries) {
-          const visibleSections = entries
-            .filter(function (entry) {
-              return entry.isIntersecting;
-            })
-            .sort(function (first, second) {
-              return first.boundingClientRect.top - second.boundingClientRect.top;
-            });
+      const observedSections = Array.from(sectionMap.keys());
+      let activeSectionTicking = false;
 
-          if (visibleSections[0]) {
-            setActiveSection(visibleSections[0].target);
+      function updateActiveSection() {
+        const marker = Math.min(window.innerHeight * 0.35, 260);
+        let activeSection = observedSections[0];
+
+        observedSections.forEach(function (section) {
+          if (section.getBoundingClientRect().top <= marker) {
+            activeSection = section;
           }
+        });
+
+        if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4) {
+          activeSection = observedSections[observedSections.length - 1];
+        }
+
+        if (activeSection) {
+          setActiveSection(activeSection);
+        }
+      }
+
+      function requestActiveSectionUpdate() {
+        if (activeSectionTicking) return;
+        activeSectionTicking = true;
+        window.requestAnimationFrame(function () {
+          activeSectionTicking = false;
+          updateActiveSection();
+        });
+      }
+
+      const sectionObserver = new IntersectionObserver(
+        function () {
+          requestActiveSectionUpdate();
         },
         { rootMargin: "-36% 0px -48% 0px", threshold: 0.01 }
       );
@@ -864,6 +949,10 @@
       sectionMap.forEach(function (_link, section) {
         sectionObserver.observe(section);
       });
+
+      window.addEventListener("scroll", requestActiveSectionUpdate, { passive: true });
+      window.addEventListener("resize", updateActiveSection);
+      updateActiveSection();
     }
   }
 

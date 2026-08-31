@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 
-<html lang="fr" dir="ltr">
+<html lang="fr" dir="ltr" data-theme="light">
 
 <head>
 
@@ -12,7 +12,7 @@
 
     <meta name="keywords" content="Moctar Goumar Attama, IoT, ESP32, Industrie 4.0, énergie, portfolio professionnel, génie industriel">
 
-    <meta name="theme-color" content="#07111f">
+    <meta name="theme-color" content="#f4f8fb">
 
     <title>Moctar Goumar Attama | Portfolio professionnel</title>
 
@@ -22,9 +22,11 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="premium.css?v=20260831-project-cta">
 
 </head>
 
@@ -72,7 +74,7 @@
 
                 <span class="brand-mark">MGA</span>
 
-                <span class="brand-text">IoT & Industrie 4.0</span>
+                <span class="brand-text">Ingénierie • Énergie • Digital</span>
 
             </a>
 
@@ -98,13 +100,21 @@
 
                 <a href="#about">Profil</a>
 
+                <a href="#journey">Parcours</a>
+
                 <a href="#projects">Projets</a>
 
                 <a href="#skills">Compétences</a>
 
                 <a href="#contact">Contact</a>
 
-                <button class="theme-toggle" type="button" aria-label="Changer le thème">Mode nuit</button>
+                <button class="theme-toggle" type="button" aria-label="Changer le thème">
+                    <svg class="button-icon theme-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.64 5.64l1.42 1.42M16.94 16.94l1.42 1.42M18.36 5.64l-1.42 1.42M7.06 16.94l-1.42 1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                        <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/>
+                    </svg>
+                    <span class="theme-label">Mode nuit</span>
+                </button>
 
             </div>
 
@@ -141,6 +151,11 @@
             <div class="hero-grid container">
 
                 <div class="hero-copy reveal">
+
+                    <p class="hero-overline">
+                        <span class="availability-dot" aria-hidden="true"></span>
+                        Élève ingénieur • Génie industriel • Rabat
+                    </p>
 
                     <div class="signal-rail" aria-label="Compétences en mouvement">
 
@@ -235,8 +250,8 @@
                     </div>
 
                     <h1 class="hero-title">
-                        Je conçois et digitalise<br>
-                        les systèmes énergétiques.
+                        <span>Je transforme l’industrie et l’énergie en</span>
+                        <span class="hero-title-accent">solutions connectées.</span>
                     </h1>
 
                     <aside class="hero-card hero-card-mobile reveal" aria-label="Carte de profil mobile">
@@ -244,27 +259,43 @@
                         <div class="hud-grid"></div>
                         <div class="orbit orbit-one"></div>
                         <div class="orbit orbit-two"></div>
-                        <img src="assets/images/photo.jpg" alt="Portrait de Moctar Goumar Attama" class="profile-photo">
+                        <img src="assets/images/photo.jpg" alt="Portrait de Moctar Goumar Attama" class="profile-photo" width="1122" height="1402" fetchpriority="high">
                         <div class="profile-panel">
                             <span class="status-dot"></span>
                             <div>
                                 <strong>Moctar Goumar Attama</strong>
-                                <p>IoT, automatisation, énergie et web</p>
+                                <p>Énergie solaire • IoT • Automatisation</p>
                             </div>
                         </div>
                     </aside>
 
                     <p class="hero-lead">
 
-                        Élève ingénieur en génie industriel, option transformation digitale énergétique et renouvelable.
+                        Spécialisé en transformation digitale énergétique et renouvelable, je relie automatisation, IoT, systèmes embarqués et applications métier.
 
                     </p>
 
                     <div class="hero-actions">
 
-                        <a class="btn primary" href="#projects">Voir les 21 projets</a>
+                        <a class="btn primary" href="#projects">
+                            <svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                                <rect x="3" y="3" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                                <rect x="14" y="3" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                                <rect x="3" y="14" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                                <rect x="14" y="14" width="7" height="7" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                            </svg>
+                            <span>Explorer mes 23 projets</span>
+                            <svg class="button-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
 
-                        <a class="btn ghost" href="assets/cv_moctar_goumar_attama_v2.pdf" download>Télécharger le CV</a>
+                        <a class="btn ghost" href="assets/cv_moctar_goumar_attama_v2.pdf" download>
+                            <svg class="button-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 3v12M7 10l5 5 5-5M5 21h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Télécharger mon CV</span>
+                        </a>
 
                     </div>
 
@@ -272,17 +303,25 @@
 
                         <div>
 
-                            <strong>5</strong>
+                            <strong>23</strong>
 
-                            <span>domaines techniques</span>
+                            <span>projets techniques</span>
 
                         </div>
 
                         <div>
 
-                            <strong>5e année</strong>
+                            <strong>3</strong>
 
-                            <span>cycle ingénieur</span>
+                            <span>expériences terrain</span>
+
+                        </div>
+
+                        <div>
+
+                            <strong>2027</strong>
+
+                            <span>diplôme prévu</span>
 
                         </div>
 
@@ -302,7 +341,7 @@
 
                     <div class="orbit orbit-two"></div>
 
-                    <img src="assets/images/photo.jpg" alt="Portrait de Moctar Goumar Attama" class="profile-photo">
+                    <img src="assets/images/photo.jpg" alt="Portrait de Moctar Goumar Attama" class="profile-photo" width="1122" height="1402" fetchpriority="high">
 
                     <div class="profile-panel">
 
@@ -312,7 +351,7 @@
 
                             <strong>Moctar Goumar Attama</strong>
 
-                            <p>IoT, automatisation, énergie et web</p>
+                            <p>Énergie solaire • IoT • Automatisation</p>
 
                         </div>
 
@@ -332,7 +371,11 @@
 
                 <div class="section-heading centered reveal">
 
-                    <p class="eyebrow profile-label">Profil hybride</p>
+                    <p class="eyebrow profile-label">Ce que j’apporte</p>
+
+                    <h2>Une culture du terrain, renforcée par le digital.</h2>
+
+                    <p class="section-subtitle">Un profil transversal pour comprendre les équipements, connecter les données et construire des solutions utiles.</p>
 
                 </div>
 
@@ -345,6 +388,24 @@
                         Aujourd’hui, je conçois des outils techniques qui relient le terrain, les données et la supervision.
 
                     </p>
+
+                    <div class="focus-grid" aria-label="Forces professionnelles">
+                        <article>
+                            <span aria-hidden="true">01</span>
+                            <h3>Terrain industriel</h3>
+                            <p>Maintenance, électricité et compréhension concrète des équipements.</p>
+                        </article>
+                        <article>
+                            <span aria-hidden="true">02</span>
+                            <h3>Systèmes connectés</h3>
+                            <p>IoT, automatisation, supervision et exploitation des données.</p>
+                        </article>
+                        <article>
+                            <span aria-hidden="true">03</span>
+                            <h3>Énergie durable</h3>
+                            <p>Photovoltaïque, monitoring et solutions énergétiques digitales.</p>
+                        </article>
+                    </div>
 
                 </div>
 
@@ -360,7 +421,11 @@
 
                 <div class="section-heading centered reveal">
 
-                    <p class="eyebrow journey-label" id="journey-title">Parcours</p>
+                    <p class="eyebrow journey-label">Expériences &amp; formation</p>
+
+                    <h2 id="journey-title">Du métier technique à l’ingénierie des systèmes.</h2>
+
+                    <p class="section-subtitle">Une progression construite entre ateliers, chantiers, énergie et transformation digitale.</p>
 
                 </div>
 
@@ -572,7 +637,9 @@
 
                 <div class="section-heading centered reveal">
 
-                    <p class="eyebrow certifications-label" id="certifications-title">Certifications</p>
+                    <p class="eyebrow certifications-label">Certifications</p>
+
+                    <h2 id="certifications-title">Des compétences validées au-delà du cursus.</h2>
 
                 </div>
 
@@ -672,7 +739,9 @@
 
                 <div class="section-heading centered reveal">
 
-                    <p class="eyebrow engagement-label" id="engagement-title">Engagement / Leadership</p>
+                    <p class="eyebrow engagement-label">Engagement</p>
+
+                    <h2 id="engagement-title">La technique compte. La capacité à fédérer aussi.</h2>
 
                 </div>
 
@@ -730,9 +799,11 @@
 
                 <div class="section-heading centered reveal">
 
-                    <p class="eyebrow">Mes réalisations</p>
+                    <p class="eyebrow">Réalisations sélectionnées</p>
 
-                    <h2>21 projets techniques.</h2>
+                    <h2>Des solutions concrètes, du terrain à l’application.</h2>
+
+                    <p class="section-subtitle">23 projets en énergie, IoT, automatisation, intelligence artificielle et produits digitaux.</p>
 
                 </div>
 
@@ -752,43 +823,39 @@
 
                 </div>
 
-                <p class="project-count reveal" id="project-count" aria-live="polite">21 projets affichés</p>
+                <p class="project-count reveal" id="project-count" aria-live="polite">23 projets affichés</p>
 
 
 
                 <div class="projects-grid">
 
-                    <article class="project-card featured reveal" data-category="iot">
+                    <article class="project-card featured reveal" data-category="energy web" data-priority="1">
 
                         <div class="project-image">
 
-                            <div class="project-carousel project-carousel-five" aria-label="Images et vidéo du projet drone, robot et impression 3D">
+                            <img src="image%20app%20he.png" alt="Application digitale développée pour l'entreprise solaire HELIANTHA" loading="lazy" decoding="async">
 
-                                <img src="assets/images/robot.jpeg" alt="Prototype de robot embarqué" loading="lazy" decoding="async">
-
-                                <img src="assets/images/drone.jpeg" alt="Prototype de drone embarqué" loading="lazy" decoding="async">
-
-                                <img src="assets/images/appreil.jpeg" alt="Appareil électronique embarqué" loading="lazy" decoding="async">
-
-                                <img src="assets/images/imprimante.jpeg" alt="Imprimante 3D utilisée pour les prototypes" loading="lazy" decoding="async">
-
-                                <video class="project-video-frame project-video-local" data-src="assets/MAIN%20ROBOTISER%20.mp4" muted loop playsinline preload="none" title="Main robotiser"></video>
-
-                            </div>
-
-                            <span class="project-badge">IoT</span>
+                            <span class="project-badge">Énergie</span>
 
                         </div>
 
+                        <a class="project-card-link" href="https://github.com/moctargoumarattama/HELIANTHA-SOLAIRE" target="_blank" rel="noreferrer" aria-label="Voir le projet HELIANTHA Solaire sur GitHub"></a>
+
                         <div class="project-body">
 
-                            <p class="project-kicker">Drone - Robot - Impression 3D</p>
+                            <p class="project-kicker">HELIANTHA - Application mobile</p>
 
-                            <h3>Systèmes embarqués drone et robot</h3>
+                            <h3>Développement d’une application digitale pour HELIANTHA</h3>
 
-                            <p>Prototype autour de l'électronique embarquée, du drone, du robot et de pièces réalisées par impression 3D.</p>
+                            <p>Conception et développement d’une solution destinée à digitaliser les activités de l’entreprise, spécialisée dans le domaine de l’énergie solaire photovoltaïque.</p>
 
-                            <div class="project-tags"><span>IoT</span><span>Embarqué</span><span>Impression 3D</span></div>
+                            <div class="project-tags"><span>Mobile</span><span>Solaire</span><span>Photovoltaïque</span><span>Digitalisation</span></div>
+
+                            <div class="project-actions">
+
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/HELIANTHA-SOLAIRE" target="_blank" rel="noreferrer">GitHub</a>
+
+                            </div>
 
                         </div>
 
@@ -796,7 +863,112 @@
 
 
 
-                    <article class="project-card reveal" data-category="iot">
+                    <article class="project-card reveal" data-category="iot energy" data-priority="2">
+
+                        <div class="project-image">
+
+                            <video class="project-video-frame project-video-local" data-src="bms.mp4" muted loop playsinline preload="none" aria-label="Vidéo du système intelligent de gestion et diagnostic de batteries"></video>
+
+                            <span class="project-badge">IoT</span>
+
+                        </div>
+
+                        <div class="project-body">
+
+                            <p class="project-kicker">Battery Management &amp; Health Monitoring System</p>
+
+                            <h3>Système intelligent de gestion et diagnostic de batteries</h3>
+
+                            <p>Développement d’un prototype basé sur un système embarqué permettant de surveiller et d’analyser l’état d’une batterie : tension, courant, température, état de charge <strong>SOC</strong>, état de santé <strong>SOH</strong>, diagnostic et estimation des performances.</p>
+
+                            <div class="project-tags"><span>BMS</span><span>Système embarqué</span><span>SOC</span><span>SOH</span></div>
+
+                        </div>
+
+                    </article>
+
+
+
+                    <article class="project-card reveal" data-category="iot" data-priority="3">
+
+                        <div class="project-image">
+
+                            <div class="project-carousel project-carousel-two" aria-label="Images et vidéo du projet monitoring énergie ESP32">
+                                <img src="assets/images/SUPERVISION%20.png" alt="Prototype ESP32 du projet iot energy esp32 monitoring" loading="lazy" decoding="async">
+                                <video class="project-video-frame project-video-local" data-src="assets/IOT%20SYSTEME%20EMBARQUER%20.mp4" muted loop playsinline preload="none" title="IoT système embarqué"></video>
+                            </div>
+
+                            <span class="project-badge">IoT</span>
+
+                        </div>
+
+                        <a class="project-card-link" href="https://github.com/moctargoumarattama/iot-energy-esp32-monitoring" target="_blank" rel="noreferrer" aria-label="Voir le projet iot energy esp32 monitoring sur GitHub"></a>
+
+                        <div class="project-body">
+
+                            <p class="project-kicker">iot-energy-esp32-monitoring</p>
+
+                            <h3>Monitoring énergie ESP32</h3>
+
+                            <p>Prototype IoT et système embarqué reliant les mesures énergétiques au suivi terrain.</p>
+
+                            <div class="project-tags"><span>ESP32</span><span>IoT</span><span>Systèmes embarqués</span><span>Énergie</span></div>
+
+                            <div class="project-actions">
+
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/iot-energy-esp32-monitoring" target="_blank" rel="noreferrer">GitHub</a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+
+                    <article class="project-card reveal" data-category="energy" data-priority="4">
+
+                        <div class="project-image">
+
+                            <div class="project-carousel project-carousel-seven" aria-label="Médias des projets solaires">
+
+                                <video class="project-video-frame project-video-local" data-src="assets/INSTALLATION%20DE%20600kwc%20batiment%20fifa%20.mp4" muted loop playsinline preload="none" title="Installation de 600 kWc au bâtiment FIFA"></video>
+
+                                <video class="project-video-frame project-video-local" data-src="assets/INSTALLATION%20GRID%20ON%20ONDULEUR%20DE%2015KW.mp4" muted loop playsinline preload="none" title="Installation grid on onduleur de 15 kW"></video>
+
+                                <img src="assets/panneau%20fifa%20.jpeg" alt="Panneau solaire FIFA" loading="lazy" decoding="async">
+
+                                <video class="project-video-frame project-video-local" data-src="assets/POMPE%20SOLAIRE%20MOHAMEDIA%20.mp4" muted loop playsinline preload="none" title="Pompe solaire Mohamedia"></video>
+
+                                <video class="project-video-frame project-video-local" data-src="assets/salle%20de%20moteur%20.mp4" muted loop playsinline preload="none" title="Salle de moteur"></video>
+
+                                <video class="project-video-frame project-video-local" data-src="assets/simulation%20logiciel%20structure%20solaire%20.mp4" muted loop playsinline preload="none" title="Simulation logiciel structure solaire"></video>
+
+                                <img src="assets/SOLAIRE%20MOI.jpeg" alt="Projet solaire personnel" loading="lazy" decoding="async">
+
+                            </div>
+
+                            <span class="project-badge">Énergie</span>
+
+                        </div>
+
+                        <div class="project-body">
+
+                            <p class="project-kicker">Chantiers photovoltaïques</p>
+
+                            <h3>Projets solaires accompagnés</h3>
+
+                            <p>Suivi terrain sur plusieurs installations solaires: bâtiment FIFA 600 kWc, onduleur grid-on 15 kW, panneau FIFA et pompe solaire à Mohamedia.</p>
+
+                            <div class="project-tags"><span>Solaire</span><span>Photovoltaïque</span><span>Pompage</span></div>
+
+                        </div>
+
+                    </article>
+
+
+
+                    <article class="project-card reveal" data-category="iot" data-priority="5">
 
                         <div class="project-image">
 
@@ -836,7 +1008,43 @@
 
 
 
-                    <article class="project-card reveal" data-category="industry">
+                    <article class="project-card reveal" data-category="ai web" data-priority="6">
+
+                        <div class="project-image">
+
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/15WITb4EvSnO-ugWs72_j7_t5WoGqEK8C/preview" title="Démo vidéo du projet assistant personnel IA" loading="lazy" allow="autoplay; fullscreen"></iframe>
+
+                            <span class="project-badge">IA</span>
+
+                        </div>
+
+                        <a class="project-card-link" href="https://drive.google.com/file/d/15WITb4EvSnO-ugWs72_j7_t5WoGqEK8C/view?usp=drive_link" target="_blank" rel="noreferrer" aria-label="Voir la démo vidéo du projet assistant personnel IA"></a>
+
+                        <div class="project-body">
+
+                            <p class="project-kicker">moctar-jarvis-assistant</p>
+
+                            <h3>Assistant personnel IA</h3>
+
+                            <p>Assistant numérique pour automatiser les demandes et centraliser les interactions utiles.</p>
+
+                            <div class="project-tags"><span>IA</span><span>Assistant</span><span>Automatisation</span></div>
+
+                            <div class="project-actions">
+
+                                <a class="project-btn github" href="https://github.com/moctargoumarattama/moctar-jarvis-assistant" target="_blank" rel="noreferrer">GitHub</a>
+
+                                <a class="project-btn demo" href="https://drive.google.com/file/d/15WITb4EvSnO-ugWs72_j7_t5WoGqEK8C/view?usp=drive_link" target="_blank" rel="noreferrer">Voir le projet</a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+
+                    <article class="project-card reveal" data-category="industry" data-priority="7">
 
                         <div class="project-image">
 
@@ -855,6 +1063,44 @@
                             <p>Prototype industriel avec capteur de niveau, automate programmable et moteur asynchrone pour piloter le remplissage.</p>
 
                             <div class="project-tags"><span>Automate</span><span>Capteur niveau</span><span>Moteur AC</span></div>
+
+                        </div>
+
+                    </article>
+
+
+
+                    <article class="project-card reveal" data-category="iot">
+
+                        <div class="project-image">
+
+                            <div class="project-carousel project-carousel-five" aria-label="Images et vidéo du projet drone, robot et impression 3D">
+
+                                <img src="assets/images/robot.jpeg" alt="Prototype de robot embarqué" loading="lazy" decoding="async">
+
+                                <img src="assets/images/drone.jpeg" alt="Prototype de drone embarqué" loading="lazy" decoding="async">
+
+                                <img src="assets/images/appreil.jpeg" alt="Appareil électronique embarqué" loading="lazy" decoding="async">
+
+                                <img src="assets/images/imprimante.jpeg" alt="Imprimante 3D utilisée pour les prototypes" loading="lazy" decoding="async">
+
+                                <video class="project-video-frame project-video-local" data-src="assets/MAIN%20ROBOTISER%20.mp4" muted loop playsinline preload="none" title="Main robotiser"></video>
+
+                            </div>
+
+                            <span class="project-badge">IoT</span>
+
+                        </div>
+
+                        <div class="project-body">
+
+                            <p class="project-kicker">Drone - Robot - Impression 3D</p>
+
+                            <h3>Systèmes embarqués drone et robot</h3>
+
+                            <p>Prototype autour de l'électronique embarquée, du drone, du robot et de pièces réalisées par impression 3D.</p>
+
+                            <div class="project-tags"><span>IoT</span><span>Embarqué</span><span>Impression 3D</span></div>
 
                         </div>
 
@@ -958,48 +1204,6 @@
 
 
 
-                    <article class="project-card reveal" data-category="energy">
-
-                        <div class="project-image">
-
-                            <div class="project-carousel project-carousel-seven" aria-label="Médias des projets solaires">
-
-                                <video class="project-video-frame project-video-local" data-src="assets/INSTALLATION%20DE%20600kwc%20batiment%20fifa%20.mp4" muted loop playsinline preload="none" title="Installation de 600 kWc au bâtiment FIFA"></video>
-
-                                <video class="project-video-frame project-video-local" data-src="assets/INSTALLATION%20GRID%20ON%20ONDULEUR%20DE%2015KW.mp4" muted loop playsinline preload="none" title="Installation grid on onduleur de 15 kW"></video>
-
-                                <img src="assets/panneau%20fifa%20.jpeg" alt="Panneau solaire FIFA" loading="lazy" decoding="async">
-
-                                <video class="project-video-frame project-video-local" data-src="assets/POMPE%20SOLAIRE%20MOHAMEDIA%20.mp4" muted loop playsinline preload="none" title="Pompe solaire Mohamedia"></video>
-
-                                <video class="project-video-frame project-video-local" data-src="assets/salle%20de%20moteur%20.mp4" muted loop playsinline preload="none" title="Salle de moteur"></video>
-
-                                <video class="project-video-frame project-video-local" data-src="assets/simulation%20logiciel%20structure%20solaire%20.mp4" muted loop playsinline preload="none" title="Simulation logiciel structure solaire"></video>
-
-                                <img src="assets/SOLAIRE%20MOI.jpeg" alt="Projet solaire personnel" loading="lazy" decoding="async">
-
-                            </div>
-
-                            <span class="project-badge">Énergie</span>
-
-                        </div>
-
-                        <div class="project-body">
-
-                            <p class="project-kicker">Chantiers photovoltaïques</p>
-
-                            <h3>Projets solaires accompagnés</h3>
-
-                            <p>Suivi terrain sur plusieurs installations solaires: bâtiment FIFA 600 kWc, onduleur grid-on 15 kW, panneau FIFA et pompe solaire à Mohamedia.</p>
-
-                            <div class="project-tags"><span>Solaire</span><span>Photovoltaïque</span><span>Pompage</span></div>
-
-                        </div>
-
-                    </article>
-
-
-
                     <article class="project-card reveal" data-category="industry">
 
                         <div class="project-image">
@@ -1031,79 +1235,6 @@
                             <p>Maîtrise des bases d'usinage: fraisage, tournage, lecture de pièces et travail en atelier.</p>
 
                             <div class="project-tags"><span>Fraiseuse</span><span>Tour</span><span>Atelier</span></div>
-
-                        </div>
-
-                    </article>
-
-
-
-                    <article class="project-card reveal" data-category="ai web">
-
-                        <div class="project-image">
-
-                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/15WITb4EvSnO-ugWs72_j7_t5WoGqEK8C/preview" title="Démo vidéo du projet assistant personnel IA" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
-
-                            <span class="project-badge">IA</span>
-
-                        </div>
-
-                        <a class="project-card-link" href="https://drive.google.com/file/d/15WITb4EvSnO-ugWs72_j7_t5WoGqEK8C/view?usp=drive_link" target="_blank" rel="noreferrer" aria-label="Voir la démo vidéo du projet assistant personnel IA"></a>
-
-                        <div class="project-body">
-
-                            <p class="project-kicker">moctar-jarvis-assistant</p>
-
-                            <h3>Assistant personnel IA</h3>
-
-                            <p>Assistant numérique pour automatiser les demandes et centraliser les interactions utiles.</p>
-
-                            <div class="project-tags"><span>IA</span><span>Assistant</span><span>Automatisation</span></div>
-
-                            <div class="project-actions">
-
-                                <a class="project-btn github" href="https://github.com/moctargoumarattama/moctar-jarvis-assistant" target="_blank" rel="noreferrer">GitHub</a>
-
-                                <a class="project-btn demo" href="https://drive.google.com/file/d/15WITb4EvSnO-ugWs72_j7_t5WoGqEK8C/view?usp=drive_link" target="_blank" rel="noreferrer">Voir le projet</a>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-
-                    <article class="project-card reveal" data-category="iot">
-
-                        <div class="project-image">
-
-                            <div class="project-carousel project-carousel-two" aria-label="Images et vidéo du projet monitoring énergie ESP32">
-                                <img src="assets/images/SUPERVISION%20.png" alt="Prototype ESP32 du projet iot energy esp32 monitoring" loading="lazy" decoding="async">
-                                <video class="project-video-frame project-video-local" data-src="assets/IOT%20SYSTEME%20EMBARQUER%20.mp4" muted loop playsinline preload="none" title="IoT système embarqué"></video>
-                            </div>
-
-                            <span class="project-badge">IoT</span>
-
-                        </div>
-
-                        <a class="project-card-link" href="https://github.com/moctargoumarattama/iot-energy-esp32-monitoring" target="_blank" rel="noreferrer" aria-label="Voir le projet iot energy esp32 monitoring sur GitHub"></a>
-
-                        <div class="project-body">
-
-                            <p class="project-kicker">iot-energy-esp32-monitoring</p>
-
-                            <h3>Monitoring énergie ESP32</h3>
-
-                            <p>Prototype IoT et système embarqué reliant les mesures énergétiques au suivi terrain.</p>
-
-                            <div class="project-tags"><span>ESP32</span><span>IoT</span><span>Systèmes embarqués</span><span>Énergie</span></div>
-
-                            <div class="project-actions">
-
-                                <a class="project-btn github" href="https://github.com/moctargoumarattama/iot-energy-esp32-monitoring" target="_blank" rel="noreferrer">GitHub</a>
-
-                            </div>
 
                         </div>
 
@@ -1217,7 +1348,7 @@
 
                         <div class="project-image">
 
-                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1I5lTm7ab47GrjCwa_nCitSe3T5vi9u7l/preview" title="Démo vidéo du projet labeeb" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1I5lTm7ab47GrjCwa_nCitSe3T5vi9u7l/preview" title="Démo vidéo du projet labeeb" loading="lazy" allow="autoplay; fullscreen"></iframe>
 
                             <span class="project-badge">Web</span>
 
@@ -1253,7 +1384,7 @@
 
                         <div class="project-image">
 
-                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/11mJfC-4h5bftRiJORl3BYOBe3a4ef1I3/preview" title="Démo vidéo du projet mutiecole" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/11mJfC-4h5bftRiJORl3BYOBe3a4ef1I3/preview" title="Démo vidéo du projet mutiecole" loading="lazy" allow="autoplay; fullscreen"></iframe>
 
                             <span class="project-badge">Web</span>
 
@@ -1325,7 +1456,7 @@
 
                         <div class="project-image">
 
-                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1bqQ_v14UK5rNPb1xF_CG3rM2MYZf4Ger/preview" title="Démo vidéo du projet baba marketplace livraison" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1bqQ_v14UK5rNPb1xF_CG3rM2MYZf4Ger/preview" title="Démo vidéo du projet baba marketplace livraison" loading="lazy" allow="autoplay; fullscreen"></iframe>
 
                             <span class="project-badge">Web</span>
 
@@ -1361,7 +1492,7 @@
 
                         <div class="project-image">
 
-                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1qUNlDuknuEftyr6XXaBnroXVWG_7v79F/preview" title="Démo vidéo du projet monitoring energy" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1qUNlDuknuEftyr6XXaBnroXVWG_7v79F/preview" title="Démo vidéo du projet monitoring energy" loading="lazy" allow="autoplay; fullscreen"></iframe>
 
                             <span class="project-badge">Énergie</span>
 
@@ -1431,7 +1562,7 @@
 
                         <div class="project-image">
 
-                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1DJADUc6Brb25py3tvoyZc4FeohRy05oi/preview" title="Démo vidéo du projet immobilier Delnova" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                            <iframe class="project-video-frame" data-src="https://drive.google.com/file/d/1DJADUc6Brb25py3tvoyZc4FeohRy05oi/preview" title="Démo vidéo du projet immobilier Delnova" loading="lazy" allow="autoplay; fullscreen"></iframe>
 
                             <span class="project-badge">Web</span>
 
@@ -1511,7 +1642,11 @@
 
                 <div class="section-heading centered reveal">
 
-                    <p class="eyebrow skills-label">Compétences</p>
+                    <p class="eyebrow skills-label">Expertises</p>
+
+                    <h2>Une boîte à outils pensée pour des systèmes complets.</h2>
+
+                    <p class="section-subtitle">Concevoir, connecter, automatiser et analyser.</p>
 
                 </div>
 
@@ -1627,33 +1762,45 @@
 
                 <div class="section-heading centered reveal">
 
-                    <p class="eyebrow">Contact</p>
+                    <p class="eyebrow">Prêt à collaborer</p>
 
-                    <h2 class="contact-title"><span>Parlons projet.</span></h2>
+                    <h2 class="contact-title"><span>Parlons de votre prochain défi technique.</span></h2>
 
-                    <p class="section-subtitle left">Disponible pour projets IoT, énergie et systèmes connectés.</p>
+                    <p class="section-subtitle left">Pour une opportunité, une collaboration ou un projet en énergie, IoT et industrie, contactez-moi directement.</p>
 
                     <div class="contact-actions">
 
                         <a class="contact-link email" href="mailto:moctargoumarattama@gmail.com">
 
+                            <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                                <path d="M4 6h16v12H4zM4 7l8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+
                             <span>EMAIL</span>
 
-                            <strong>Entrer en contact</strong>
+                            <strong>Écrire à Moctar</strong>
 
                         </a>
 
                         <a class="contact-link linkedin" href="https://www.linkedin.com/in/goumar-attama-moctar-468930256?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noreferrer">
 
+                            <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                                <path d="M6.5 9.5V18M6.5 6.2v.1M10.5 18v-8.5M10.5 13.2c.7-2.5 6-2.7 6 1.2V18M4 4h16v16H4z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+
                             <span>LINKEDIN</span>
 
-                            <strong>Profil LinkedIn</strong>
+                            <strong>Voir le profil</strong>
 
                         </a>
 
                         <a class="contact-link cv" href="assets/cv_moctar_goumar_attama_v2.pdf" download>
 
-                            <span>CV</span>
+                            <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 3v12M7 10l5 5 5-5M5 21h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+
+                            <span>CV PDF</span>
 
                             <strong>Télécharger le CV</strong>
 
@@ -1737,7 +1884,7 @@
 
 
 
-    <script src="script.js"></script>
+    <script src="script.js?v=20260831-project-cta"></script>
 
 </body>
 
