@@ -184,14 +184,17 @@ body::after,
 }
 
 .ambient-grid {
+  opacity: 0.42;
+}
+
+.ambient-grid::before {
   background-image:
     linear-gradient(rgba(130, 185, 208, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(120, 205, 185, 0.03) 1px, transparent 1px);
   background-size: 72px 72px;
-  opacity: 0.42;
 }
 
-[data-theme="light"] .ambient-grid {
+[data-theme="light"] .ambient-grid::before {
   background-image:
     linear-gradient(rgba(16, 42, 58, 0.022) 1px, transparent 1px),
     linear-gradient(90deg, rgba(16, 42, 58, 0.022) 1px, transparent 1px);
