@@ -53,7 +53,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   max-width: 100%;
   overflow-x: clip;
 }
@@ -5706,6 +5706,12 @@ h3 {
   .contact-link {
     min-height: 108px;
   }
+
+  .contact-email .copy-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 }
 
 @media (max-width: 560px) {
@@ -6008,7 +6014,7 @@ h3 {
 
 /* Fluidité premium : un rythme unique, discret et performant. */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 .btn,

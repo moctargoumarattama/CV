@@ -227,7 +227,7 @@
 
     quickTop.addEventListener("click", function () {
       quickTop.classList.add("is-lifting");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "auto" });
       window.setTimeout(function () {
         quickTop.classList.remove("is-lifting");
         setQuickTopState();
@@ -250,7 +250,7 @@
       event.preventDefault();
       const offset = 82;
       const top = target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top, behavior: "smooth" });
+      window.scrollTo({ top, behavior: "auto" });
     });
   });
 
@@ -297,7 +297,7 @@
       window.requestAnimationFrame(function () {
         const offset = 92;
         const top = target.getBoundingClientRect().top + window.scrollY - offset;
-        window.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? "auto" : "smooth" });
+        window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
       });
     });
   }
@@ -956,7 +956,6 @@
         sectionObserver.observe(section);
       });
 
-      window.addEventListener("scroll", requestActiveSectionUpdate, { passive: true });
       window.addEventListener("resize", updateActiveSection);
       updateActiveSection();
     }
