@@ -7,3 +7,8 @@ build/
 ~$*
 *.tmp
 *.log
+scratch/
+preview_3d.html
+scripts/build_modal_demo.py
+qrcode_moctargoumarattama.netlify.app.png
+assets/3d/

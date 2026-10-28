@@ -29,21 +29,49 @@
 
   if (pageLoader) {
     let loaderHidden = false;
+    const loaderCircle = document.getElementById("loader-circle");
+    const loaderPercent = document.getElementById("loader-percent");
+    const totalCircumference = 226; // 2 * PI * 36
+    const startTime = performance.now();
+    const duration = 1200; // 1.2 seconde de chargement fluide et luxueux
+
+    function setLoaderProgress(val) {
+      const progress = Math.min(100, Math.max(0, val));
+      if (loaderPercent) loaderPercent.textContent = Math.round(progress) + "%";
+      if (loaderCircle) {
+        const offset = totalCircumference - (progress / 100) * totalCircumference;
+        loaderCircle.style.strokeDashoffset = offset;
+      }
+    }
+
+    function updateLoader(currentTime) {
+      if (loaderHidden) return;
+      const elapsed = currentTime - startTime;
+      const t = Math.min(1, elapsed / duration);
+
+      // Courbe d'accélération puis décélération élégante (ease-out cubic)
+      const easedProgress = 1 - Math.pow(1 - t, 2.5);
+      setLoaderProgress(easedProgress * 100);
+
+      if (t < 1) {
+        window.requestAnimationFrame(updateLoader);
+      } else {
+        setLoaderProgress(100);
+        window.setTimeout(hidePageLoader, 140); // Courte pause à 100% pour savourer la complétion
+      }
+    }
+
+    window.requestAnimationFrame(updateLoader);
 
     function hidePageLoader() {
       if (loaderHidden) return;
       loaderHidden = true;
+      setLoaderProgress(100);
 
       pageLoader.classList.add("is-hidden");
       window.setTimeout(function () {
         pageLoader.remove();
-      }, 340);
-    }
-
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", hidePageLoader, { once: true });
-    } else {
-      hidePageLoader();
+      }, 400);
     }
   }
 
@@ -284,22 +312,26 @@
   const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const reduceMotion = reduceMotionQuery.matches;
   const networkConnection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-  const mediaModeSelect = document.getElementById("media-loading-mode");
-  const mediaModeStatus = document.getElementById("media-loading-status");
-  const mediaPreferences = document.getElementById("media-settings");
-
-  function normalizeMediaMode(value) {
-    return value === "save" || value === "standard" ? value : "auto";
-  }
-
-  let mediaMode = normalizeMediaMode(readPreference("portfolio-media-mode"));
+  let batterySaverActive = false;
 
   function requiresMediaClick() {
-    if (mediaMode === "save") return true;
-    if (mediaMode === "standard") return false;
-    // Unknown connections use the same safe default as data-saving connections.
-    if (!networkConnection || networkConnection.saveData) return true;
-    return networkConnection.effectiveType !== "4g";
+    // 1. Respect de l'économiseur de données natif activé par l'utilisateur (Navigateur / OS mobile)
+    if (networkConnection && networkConnection.saveData) return true;
+
+    // 2. Détection d'une connexion réseau restreinte ou lente (2G, 3G)
+    if (networkConnection && networkConnection.effectiveType && networkConnection.effectiveType !== "4g") {
+      return true;
+    }
+
+    // 3. Mode économie d'énergie actif (batterie <= 20% sur appareil débranché)
+    if (batterySaverActive) return true;
+
+    // 4. Appareil aux ressources très limitées (évite de surcharger les processeurs modestes)
+    if (typeof navigator.deviceMemory === "number" && navigator.deviceMemory < 4) return true;
+    if (typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency < 4) return true;
+
+    // 5. Par défaut sur réseau standard (Wi-Fi, fibre, 4G/5G) : chargement automatique fluide
+    return false;
   }
 
   let mediaClickRequired = requiresMediaClick();
@@ -453,6 +485,8 @@
   let lightbox = null;
   let lightboxFrame = null;
   let lightboxCaption = null;
+  let lightboxTitle = null;
+  let isClosingLightbox = false;
   let lastMediaTrigger = null;
   const iframePosters = new WeakMap();
 
@@ -495,6 +529,27 @@
     });
   }
 
+  function createModalLoader() {
+    const loader = document.createElement("div");
+    loader.className = "media-lightbox-loader";
+    loader.setAttribute("role", "status");
+    loader.setAttribute("aria-live", "polite");
+    loader.innerHTML = [
+      '<div class="media-lightbox-spinner">',
+      '  <div class="media-lightbox-spinner-ring"></div>',
+      '  <div class="media-lightbox-spinner-core"></div>',
+      '</div>',
+      '<div class="media-lightbox-loader-info">',
+      '  <span class="media-lightbox-loader-badge">',
+      '    <span class="media-lightbox-loader-pulse"></span>',
+      '    Document certifié',
+      '  </span>',
+      '  <p class="media-lightbox-loader-text">Chargement haute définition...</p>',
+      '</div>',
+    ].join("");
+    return loader;
+  }
+
   function getLightbox() {
     if (lightbox) return lightbox;
 
@@ -503,20 +558,34 @@
     lightbox.hidden = true;
     lightbox.setAttribute("role", "dialog");
     lightbox.setAttribute("aria-modal", "true");
-    lightbox.setAttribute("aria-label", "Apercu du media");
+    lightbox.setAttribute("aria-label", "Fiche et attestation");
     lightbox.innerHTML = [
-      '<button class="media-lightbox-close" type="button">Fermer</button>',
-      '<div class="media-lightbox-frame"></div>',
-      '<p class="media-lightbox-caption"></p>',
+      '<div class="media-lightbox-backdrop" aria-hidden="true"></div>',
+      '<div class="media-lightbox-card">',
+      '  <div class="media-lightbox-header">',
+      '    <div class="media-lightbox-title-wrap">',
+      '      <span class="media-lightbox-badge-dot" aria-hidden="true"></span>',
+      '      <strong class="media-lightbox-title">Attestation officielle</strong>',
+      '    </div>',
+      '    <button class="media-lightbox-close" type="button" aria-label="Fermer la fenêtre (Échap)">',
+      '      <span class="media-lightbox-close-text">Fermer</span>',
+      '      <kbd class="media-lightbox-kbd">Échap</kbd>',
+      '    </button>',
+      '  </div>',
+      '  <div class="media-lightbox-frame"></div>',
+      '  <p class="media-lightbox-caption"></p>',
+      '</div>',
     ].join("");
 
     document.body.appendChild(lightbox);
     lightboxFrame = lightbox.querySelector(".media-lightbox-frame");
     lightboxCaption = lightbox.querySelector(".media-lightbox-caption");
+    lightboxTitle = lightbox.querySelector(".media-lightbox-title");
 
     lightbox.querySelector(".media-lightbox-close").addEventListener("click", closeLightbox);
+
     lightbox.addEventListener("click", function (event) {
-      if (event.target === lightbox) {
+      if (event.target === lightbox || event.target.classList.contains("media-lightbox-backdrop")) {
         closeLightbox();
       }
     });
@@ -525,20 +594,32 @@
   }
 
   function closeLightbox() {
-    if (!lightbox || lightbox.hidden) return;
+    if (!lightbox || lightbox.hidden || isClosingLightbox) return;
 
-    lightbox.hidden = true;
-    document.body.classList.remove("media-open");
-    if (lightboxFrame) lightboxFrame.replaceChildren();
-    if (lastMediaTrigger) {
-      lastMediaTrigger.focus({ preventScroll: true });
-      lastMediaTrigger = null;
-    }
-    if (!mediaClickRequired) {
-      projectVideos.forEach(function (video) {
-        if (isMediaNearViewport(video, 0)) setVideoState(video, true);
-      });
-    }
+    isClosingLightbox = true;
+    lightbox.classList.add("is-closing");
+    lightbox.classList.remove("is-open");
+
+    const exitDelay = 160;
+
+    window.setTimeout(function () {
+      if (!lightbox) return;
+      lightbox.hidden = true;
+      lightbox.classList.remove("is-closing");
+      document.documentElement.classList.remove("media-open");
+      document.body.classList.remove("media-open");
+      if (lightboxFrame) lightboxFrame.replaceChildren();
+      if (lastMediaTrigger) {
+        lastMediaTrigger.focus({ preventScroll: true });
+        lastMediaTrigger = null;
+      }
+      if (!mediaClickRequired) {
+        projectVideos.forEach(function (video) {
+          if (isMediaNearViewport(video, 0)) setVideoState(video, true);
+        });
+      }
+      isClosingLightbox = false;
+    }, exitDelay);
   }
 
   function getActiveMedia(projectImage) {
@@ -563,9 +644,30 @@
     let caption = media.getAttribute("alt") || media.getAttribute("title") || media.getAttribute("aria-label") || "";
 
     if (tagName === "img") {
+      const loader = createModalLoader();
       preview = new Image();
-      preview.src = media.dataset.fullSrc || media.currentSrc || media.getAttribute("src") || media.dataset.src || "";
       preview.alt = caption;
+      preview.className = "media-lightbox-media";
+      lightboxFrame.replaceChildren(loader, preview);
+
+      let revealed = false;
+      function revealImage() {
+        if (revealed) return;
+        revealed = true;
+        loader.classList.add("is-hidden");
+        preview.classList.add("is-loaded");
+        window.setTimeout(function () {
+          if (loader.parentNode) loader.remove();
+        }, 200);
+      }
+
+      preview.src = media.dataset.fullSrc || media.currentSrc || media.getAttribute("src") || media.dataset.src || "";
+      if (preview.complete) {
+        window.setTimeout(revealImage, 90);
+      } else {
+        preview.onload = revealImage;
+        preview.onerror = revealImage;
+      }
     } else if (tagName === "video") {
       media.pause();
       preview = document.createElement("video");
@@ -574,22 +676,33 @@
       preview.autoplay = true;
       preview.loop = true;
       preview.playsInline = true;
+      preview.className = "media-lightbox-media is-loaded";
+      lightboxFrame.replaceChildren(preview);
     } else if (tagName === "iframe") {
       preview = document.createElement("iframe");
       preview.src = media.getAttribute("src") || media.dataset.src || "";
       preview.title = media.getAttribute("title") || "Apercu video";
       preview.allow = media.getAttribute("allow") || "autoplay; fullscreen";
+      preview.className = "media-lightbox-media is-loaded";
+      lightboxFrame.replaceChildren(preview);
     }
 
     if (!preview) return;
 
-    preview.className = "media-lightbox-media";
-    lightboxFrame.replaceChildren(preview);
+    if (lightboxTitle) {
+      lightboxTitle.textContent = caption || "Aperçu du média";
+    }
     lightboxCaption.textContent = caption;
     lightboxCaption.hidden = !caption;
+
     lastMediaTrigger = trigger || null;
+    isClosingLightbox = false;
+    dialog.classList.remove("is-closing");
     dialog.hidden = false;
+    dialog.classList.add("is-open");
+    document.documentElement.classList.add("media-open");
     document.body.classList.add("media-open");
+
     dialog.querySelector(".media-lightbox-close").focus({ preventScroll: true });
 
     if (tagName === "video") {
@@ -617,44 +730,129 @@
     if (!items.length) return;
 
     const dialog = getLightbox();
-    const gallery = document.createElement("div");
-    gallery.className = "media-lightbox-gallery";
 
-    items.forEach(function (item) {
-      const figure = document.createElement("figure");
+    // If single item: render directly with modern loading state
+    if (items.length === 1) {
+      const item = items[0];
       const isPdf = /\.pdf($|[?#])/i.test(item.src);
-      let media = null;
 
       if (isPdf) {
-        media = document.createElement("iframe");
+        const media = document.createElement("iframe");
         media.src = item.src;
         media.title = item.caption || "Aperçu de l'attestation";
         media.loading = "lazy";
-        media.className = "media-lightbox-media";
+        media.className = "media-lightbox-media is-loaded";
+        lightboxFrame.replaceChildren(media);
       } else {
-        media = new Image();
-        media.src = item.src;
-        media.alt = item.caption || "Attestation";
+        const loader = createModalLoader();
+        const media = new Image();
         media.className = "media-lightbox-media";
+        media.alt = item.caption || "Attestation";
+        lightboxFrame.replaceChildren(loader, media);
+
+        let revealed = false;
+        function revealImage() {
+          if (revealed) return;
+          revealed = true;
+          loader.classList.add("is-hidden");
+          media.classList.add("is-loaded");
+          window.setTimeout(function () {
+            if (loader.parentNode) loader.remove();
+          }, 200);
+        }
+
+        media.src = item.src;
+        if (media.complete) {
+          window.setTimeout(revealImage, 90);
+        } else {
+          media.onload = revealImage;
+          media.onerror = revealImage;
+        }
+      }
+    } else {
+      const loader = createModalLoader();
+      const gallery = document.createElement("div");
+      gallery.className = "media-lightbox-gallery";
+
+      let loadedCount = 0;
+      function checkAllLoaded() {
+        loadedCount += 1;
+        if (loadedCount >= items.length) {
+          loader.classList.add("is-hidden");
+          window.setTimeout(function () {
+            if (loader.parentNode) loader.remove();
+          }, 200);
+        }
       }
 
-      figure.appendChild(media);
+      items.forEach(function (item) {
+        const figure = document.createElement("figure");
+        const isPdf = /\.pdf($|[?#])/i.test(item.src);
+        let media = null;
 
-      if (item.caption) {
-        const caption = document.createElement("figcaption");
-        caption.textContent = item.caption;
-        figure.appendChild(caption);
-      }
+        if (isPdf) {
+          media = document.createElement("iframe");
+          media.src = item.src;
+          media.title = item.caption || "Aperçu de l'attestation";
+          media.loading = "lazy";
+          media.className = "media-lightbox-media is-loaded";
+          checkAllLoaded();
+        } else {
+          media = new Image();
+          media.src = item.src;
+          media.alt = item.caption || "Attestation";
+          media.onload = function () {
+            media.classList.add("is-loaded");
+            checkAllLoaded();
+          };
+          media.onerror = checkAllLoaded;
+          if (media.complete) {
+            window.setTimeout(function () {
+              media.classList.add("is-loaded");
+              checkAllLoaded();
+            }, 90);
+          }
+        }
 
-      gallery.appendChild(figure);
-    });
+        figure.appendChild(media);
 
-    lightboxFrame.replaceChildren(gallery);
-    lightboxCaption.textContent = trigger.dataset.proofTitle || "Attestations du parcours";
-    lightboxCaption.hidden = false;
+        if (item.caption) {
+          const caption = document.createElement("figcaption");
+          caption.textContent = item.caption;
+          figure.appendChild(caption);
+        }
+
+        gallery.appendChild(figure);
+      });
+
+      lightboxFrame.replaceChildren(loader, gallery);
+    }
+
+    const titleText = trigger.dataset.proofTitle || "Attestation officielle";
+    if (lightboxTitle) {
+      lightboxTitle.textContent = titleText;
+    }
+
+    const pdfUrl = trigger.dataset.proofPdf || (/\.pdf($|[?#])/i.test(items[0]?.src || "") ? items[0].src : null);
+    const captionText = items.length > 1
+      ? `${items.length} documents disponibles`
+      : (items[0].caption || titleText);
+
+    if (pdfUrl) {
+      lightboxCaption.innerHTML = `<span>${captionText}</span> <span style="opacity:0.35;margin:0 0.4rem;">•</span> <a href="${pdfUrl}" target="_blank" rel="noopener noreferrer" class="media-lightbox-pdf-link" download>📥 Télécharger le PDF officiel</a>`;
+    } else {
+      lightboxCaption.textContent = captionText;
+    }
+    lightboxCaption.hidden = !captionText && !pdfUrl;
+
     lastMediaTrigger = trigger;
+    isClosingLightbox = false;
+    dialog.classList.remove("is-closing");
     dialog.hidden = false;
+    dialog.classList.add("is-open");
+    document.documentElement.classList.add("media-open");
     document.body.classList.add("media-open");
+
     dialog.querySelector(".media-lightbox-close").focus({ preventScroll: true });
   }
 
@@ -1021,7 +1219,6 @@
 
   function refreshMediaNetworkPolicy() {
     const nextClickRequired = requiresMediaClick();
-    syncMediaPreferences();
     if (nextClickRequired === mediaClickRequired) return;
     mediaClickRequired = nextClickRequired;
 
@@ -1050,22 +1247,6 @@
     requestPreviewScan();
   }
 
-  function syncMediaPreferences() {
-    if (mediaModeSelect) mediaModeSelect.value = mediaMode;
-    if (mediaModeStatus) {
-      const clickRequired = requiresMediaClick();
-      mediaModeStatus.textContent = mediaMode === "auto"
-        ? (clickRequired ? "Mode automatique : vidéos au clic." : "Mode automatique : vidéos à l’approche de l’écran.")
-        : (clickRequired ? "Économie activée : vidéos au clic." : "Mode standard : vidéos à l’approche de l’écran.");
-    }
-  }
-
-  function setMediaPreference(value, persist) {
-    mediaMode = normalizeMediaMode(value);
-    if (persist) writePreference("portfolio-media-mode", mediaMode);
-    refreshMediaNetworkPolicy();
-  }
-
   function isMediaNearViewport(media, margin) {
     if (!media.getClientRects().length || media.closest("[hidden]")) return false;
     const bounds = media.getBoundingClientRect();
@@ -1077,18 +1258,17 @@
     networkConnection.addEventListener("change", refreshMediaNetworkPolicy);
   }
 
-  if (mediaModeSelect) {
-    mediaModeSelect.addEventListener("change", function () {
-      setMediaPreference(mediaModeSelect.value, true);
-    });
+  if (typeof navigator.getBattery === "function") {
+    navigator.getBattery().then(function (battery) {
+      function updateBatteryState() {
+        batterySaverActive = !battery.charging && battery.level <= 0.2;
+        refreshMediaNetworkPolicy();
+      }
+      updateBatteryState();
+      battery.addEventListener("chargingchange", updateBatteryState);
+      battery.addEventListener("levelchange", updateBatteryState);
+    }).catch(function () {});
   }
-  window.addEventListener("storage", function (event) {
-    if (event.key === "portfolio-media-mode" || event.key === null) {
-      setMediaPreference(event.key === null ? "auto" : event.newValue, false);
-    }
-  });
-  syncMediaPreferences();
-  if (mediaPreferences) mediaPreferences.hidden = false;
 
   function loadHeroDecorations() {
     const hero = document.getElementById("home");
