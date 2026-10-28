@@ -101,28 +101,35 @@
 
   if (year) {
     year.textContent = new Date().getFullYear();
-  }
+  }    if (pageProgressBar) {
+      let progressTicking = false;
+      let cachedScrollable = 0;
 
-  if (pageProgressBar) {
-    let progressTicking = false;
+      function updateCachedScrollable() {
+        cachedScrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      }
+      updateCachedScrollable();
 
-    function updatePageProgress() {
-      const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      const progress = Math.min(1, Math.max(0, window.scrollY / scrollable));
-      pageProgressBar.style.setProperty("--scroll-progress", progress.toFixed(4));
-      progressTicking = false;
+      function updatePageProgress() {
+        if (!cachedScrollable) updateCachedScrollable();
+        const progress = Math.min(1, Math.max(0, window.scrollY / cachedScrollable));
+        pageProgressBar.style.setProperty("--scroll-progress", progress.toFixed(4));
+        progressTicking = false;
+      }
+
+      function requestPageProgressUpdate() {
+        if (progressTicking) return;
+        progressTicking = true;
+        window.requestAnimationFrame(updatePageProgress);
+      }
+
+      window.addEventListener("scroll", requestPageProgressUpdate, { passive: true });
+      window.addEventListener("resize", function () {
+        updateCachedScrollable();
+        requestPageProgressUpdate();
+      }, { passive: true });
+      updatePageProgress();
     }
-
-    function requestPageProgressUpdate() {
-      if (progressTicking) return;
-      progressTicking = true;
-      window.requestAnimationFrame(updatePageProgress);
-    }
-
-    window.addEventListener("scroll", requestPageProgressUpdate, { passive: true });
-    window.addEventListener("resize", requestPageProgressUpdate);
-    updatePageProgress();
-  }
 
   if (navToggle && navMenu) {
     let menuPointerId = null;
@@ -318,19 +325,15 @@
     // 1. Respect de l'économiseur de données natif activé par l'utilisateur (Navigateur / OS mobile)
     if (networkConnection && networkConnection.saveData) return true;
 
-    // 2. Détection d'une connexion réseau restreinte ou lente (2G, 3G)
-    if (networkConnection && networkConnection.effectiveType && networkConnection.effectiveType !== "4g") {
+    // 2. Détection d'une connexion réseau très restreinte (2G lente uniquement)
+    if (networkConnection && (networkConnection.effectiveType === "slow-2g" || networkConnection.effectiveType === "2g")) {
       return true;
     }
 
-    // 3. Mode économie d'énergie actif (batterie <= 20% sur appareil débranché)
+    // 3. Mode économie d'énergie critique (batterie <= 15% sur appareil débranché)
     if (batterySaverActive) return true;
 
-    // 4. Appareil aux ressources très limitées (évite de surcharger les processeurs modestes)
-    if (typeof navigator.deviceMemory === "number" && navigator.deviceMemory < 4) return true;
-    if (typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency < 4) return true;
-
-    // 5. Par défaut sur réseau standard (Wi-Fi, fibre, 4G/5G) : chargement automatique fluide
+    // 4. Chargement direct et fluide des aperçus
     return false;
   }
 
@@ -671,7 +674,9 @@
     } else if (tagName === "video") {
       media.pause();
       preview = document.createElement("video");
-      preview.src = media.currentSrc || media.getAttribute("src") || media.dataset.src || "";
+      preview.src = media.dataset.src || media.currentSrc || media.getAttribute("src") || "";
+      const posterSrc = media.getAttribute("poster") || media.dataset.poster || "";
+      if (posterSrc) preview.poster = posterSrc;
       preview.controls = true;
       preview.autoplay = true;
       preview.loop = true;
@@ -856,6 +861,9 @@
     dialog.querySelector(".media-lightbox-close").focus({ preventScroll: true });
   }
 
+  const expandIconSvg = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>';
+  const playIconSvg = '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+
   function wireProjectMedia(projectImage) {
     const media = projectImage.querySelector("img, video, iframe");
     if (!media) return;
@@ -863,7 +871,6 @@
     const openButton = document.createElement("button");
     openButton.className = "media-open-btn";
     openButton.type = "button";
-    openButton.textContent = "Agrandir";
     openButton.setAttribute("aria-label", "Voir ce media en grand");
     projectImage.appendChild(openButton);
     updateMediaButton(projectImage);
@@ -890,12 +897,14 @@
     const activeMedia = getActiveMedia(projectImage);
     const clickToPlay = mediaClickRequired && activeMedia && activeMedia.matches("video, iframe");
     projectImage.classList.toggle("is-click-to-play", Boolean(clickToPlay));
-    button.textContent = clickToPlay ? "Lire la vidéo" : "Agrandir";
+    button.innerHTML = clickToPlay
+      ? playIconSvg + '<span>Lire la vidéo</span>'
+      : expandIconSvg + '<span>Agrandir</span>';
     button.setAttribute("aria-label", clickToPlay ? "Lire la vidéo du projet" : "Voir ce media en grand");
   }
 
   function ensureVideoSource(video) {
-    if (mediaClickRequired || !video || video.src || !video.dataset.src) return;
+    if (!video || video.src || !video.dataset.src) return;
     video.src = video.dataset.src;
     video.load();
   }
@@ -909,11 +918,14 @@
       : null;
     const isActiveSlide = !carousel || activeSlide === video || (activeSlide && activeSlide.contains(video));
 
-    if (shouldPlay && !mediaClickRequired && !reduceMotion && isActiveSlide &&
+    if (shouldPlay && !reduceMotion && isActiveSlide &&
       isMediaNearViewport(video, 180) && !document.body.classList.contains("media-open")) {
       loadProjectPreview(video.closest(".project-image"));
       ensureVideoSource(video);
-      video.play().catch(function () {});
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(function () {});
+      }
     } else {
       video.pause();
     }
@@ -1103,18 +1115,25 @@
     poster.hidden = Boolean(iframe.getAttribute("src"));
   }
 
-  function loadProjectPreview(projectImage) {
-    if (!projectImage || !isMediaNearViewport(projectImage, 300)) return;
+  function loadProjectPreview(projectImage, forceInstant) {
+    if (!projectImage) return;
+    if (!forceInstant && !isMediaNearViewport(projectImage, 600)) return;
     const media = getActiveMedia(projectImage);
     if (!media) return;
 
     if (media.matches("img") && !media.getAttribute("src")) {
-      media.setAttribute("fetchpriority", "low");
-      // Set responsive candidates first so the fallback is not downloaded too.
-      if (media.dataset.srcset) media.srcset = media.dataset.srcset;
-      if (media.dataset.src) media.src = media.dataset.src;
-    } else if (media.matches("video") && !media.getAttribute("poster") && media.dataset.poster) {
-      media.poster = media.dataset.poster;
+      media.setAttribute("fetchpriority", "high");
+      // Prioritize high-res candidates to prevent blur on retina screens:
+      if (media.dataset.srcset) {
+        media.srcset = media.dataset.srcset.replace(/[^,]*400\.webp\?[^,]*400w,?\s*/g, "");
+      }
+      const crispSrc = (window.devicePixelRatio >= 1.5 && media.dataset.fullSrc) ? media.dataset.fullSrc : media.dataset.src;
+      if (crispSrc) media.src = crispSrc;
+    } else if (media.matches("video")) {
+      if (!media.getAttribute("poster") && media.dataset.poster) {
+        media.poster = media.dataset.poster;
+      }
+      ensureVideoSource(media);
     } else if (media.matches("iframe")) {
       updateIframePoster(media);
     }
@@ -1137,11 +1156,15 @@
   }
 
   if (canObserve) {
-    const previewObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) loadProjectPreview(entry.target);
-      });
-    }, { rootMargin: "300px 0px", threshold: 0.01 });
+    // Preload prédictif large (750px) pour affichage instantané des images dès le défilement
+      const previewObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            loadProjectPreview(entry.target, true);
+            previewObserver.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: "750px 0px 350px 0px", threshold: 0.01 });
     document.querySelectorAll(".project-image").forEach(function (projectImage) {
       previewObserver.observe(projectImage);
     });
@@ -1173,13 +1196,21 @@
   }
 
   document.querySelectorAll("[data-copy]").forEach(function (button) {
-    const defaultText = button.textContent;
+    const defaultHTML = button.innerHTML;
+    const defaultText = button.textContent.trim();
+    const hasSvg = button.querySelector("svg") !== null;
 
     function showCopiedState() {
-      button.textContent = "Copié";
+      button.classList.add("copied");
+      if (hasSvg) {
+        button.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      } else {
+        button.textContent = "Copié";
+      }
       window.setTimeout(function () {
-        button.textContent = defaultText;
-      }, 1600);
+        button.classList.remove("copied");
+        button.innerHTML = defaultHTML;
+      }, 1800);
     }
 
     button.addEventListener("click", function () {
@@ -1188,10 +1219,10 @@
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(value).then(showCopiedState).catch(function () {
-          window.prompt("Copier l'adresse email", value);
+          window.prompt("Copier :", value);
         });
       } else {
-        window.prompt("Copier l'adresse email", value);
+        window.prompt("Copier :", value);
       }
     });
   });
@@ -1223,7 +1254,7 @@
     mediaClickRequired = nextClickRequired;
 
     projectVideos.forEach(function (video) {
-      if (mediaClickRequired) {
+      if (mediaClickRequired && !video.matches(".project-video-local")) {
         video.pause();
         if (video.getAttribute("src")) {
           video.removeAttribute("src");
@@ -1389,26 +1420,252 @@
   }
 
   const revealItems = document.querySelectorAll(".reveal");
-  if (!canObserve) {
-    revealItems.forEach(function (item) {
-      item.classList.add("visible");
-    });
-    return;
-  }
+    if (!canObserve) {
+      revealItems.forEach(function (item) {
+        item.classList.add("visible");
+      });
+      return;
+    }
 
-  const revealObserver = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          revealObserver.unobserve(entry.target);
+    // Anticipation prédictive ultra-fluide : déclenchement 250px en amont pour affichage instantané
+    const revealObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "250px 0px 100px 0px", threshold: 0.01 }
+    );
+
+    const initialViewportBottom = window.innerHeight + 160;
+    revealItems.forEach(function (item) {
+      // Révélation immédiate des éléments déjà dans le premier pli pour 0 latence au chargement
+      const rect = item.getBoundingClientRect();
+      if (rect.top <= initialViewportBottom) {
+        item.classList.add("visible");
+      } else {
+        revealObserver.observe(item);
+      }
+    });
+
+  // =========================================================================
+  // CARROUSEL 3D COVERFLOW SKILLS (MOBILE) AVEC ROTATION AUTOMATIQUE
+  // =========================================================================
+  const skillsGrid = document.querySelector(".skills-grid");
+  const skillsCards = skillsGrid ? Array.from(skillsGrid.querySelectorAll(".skill-card")) : [];
+  const skillsDots = document.getElementById("skills-dots");
+  const skillsCounter = document.getElementById("skills-counter");
+  const skillsPrev = document.getElementById("skills-prev");
+  const skillsNext = document.getElementById("skills-next");
+
+  if (skillsGrid && skillsCards.length > 0) {
+    let currentSkillIndex = 0;
+    const totalSkills = skillsCards.length;
+    let autoRotateTimer = null;
+    let isUserInteracting = false;
+    let resumeTimeout = null;
+    const autoRotateDelay = 3500; // 3.5s par carte pour une lecture confortable
+
+    // Initialisation des points de navigation (dots)
+    if (skillsDots) {
+      skillsDots.innerHTML = "";
+      skillsCards.forEach(function (_, idx) {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "skill-dot" + (idx === 0 ? " active" : "");
+        dot.setAttribute("aria-label", "Compétence " + (idx + 1));
+        dot.addEventListener("click", function () {
+          pauseAndGoTo(idx);
+        });
+        skillsDots.appendChild(dot);
+      });
+    }
+
+    function update3DDeck() {
+      // Sur écran desktop (> 860px), on désactive le mode 3D pour préserver la grille 4x2
+      if (window.innerWidth > 860) {
+        skillsCards.forEach(function (card) {
+          card.classList.remove("deck-active", "deck-prev", "deck-next", "deck-hidden-left", "deck-hidden-right");
+        });
+        stopAutoRotate();
+        return;
+      }
+
+      skillsCards.forEach(function (card, i) {
+        card.classList.remove("deck-active", "deck-prev", "deck-next", "deck-hidden-left", "deck-hidden-right");
+
+        if (i === currentSkillIndex) {
+          card.classList.add("deck-active");
+        } else if (i === (currentSkillIndex - 1 + totalSkills) % totalSkills) {
+          card.classList.add("deck-prev");
+        } else if (i === (currentSkillIndex + 1) % totalSkills) {
+          card.classList.add("deck-next");
+        } else {
+          const diff = (i - currentSkillIndex + totalSkills) % totalSkills;
+          if (diff > totalSkills / 2) {
+            card.classList.add("deck-hidden-left");
+          } else {
+            card.classList.add("deck-hidden-right");
+          }
         }
       });
-    },
-    { threshold: 0.14 }
-  );
 
-  revealItems.forEach(function (item) {
-    revealObserver.observe(item);
-  });
+      // Mise à jour visuelle des dots
+      if (skillsDots) {
+        const dots = Array.from(skillsDots.children);
+        dots.forEach(function (dot, idx) {
+          dot.classList.toggle("active", idx === currentSkillIndex);
+        });
+      }
+
+      // Mise à jour du compteur chiffré
+      if (skillsCounter) {
+        skillsCounter.textContent = String(currentSkillIndex + 1).padStart(2, "0") + " / " + String(totalSkills).padStart(2, "0");
+      }
+    }
+
+    function goToSkill(idx) {
+      currentSkillIndex = (idx + totalSkills) % totalSkills;
+      update3DDeck();
+    }
+
+    function nextSkill() {
+      goToSkill(currentSkillIndex + 1);
+    }
+
+    function prevSkill() {
+      goToSkill(currentSkillIndex - 1);
+    }
+
+    let isSkillsInViewport = false;
+
+    function startAutoRotate() {
+      if (autoRotateTimer || window.innerWidth > 860 || !isSkillsInViewport) return;
+      autoRotateTimer = window.setInterval(function () {
+        if (!isUserInteracting) {
+          nextSkill();
+        }
+      }, autoRotateDelay);
+    }
+
+    function stopAutoRotate() {
+      if (autoRotateTimer) {
+        window.clearInterval(autoRotateTimer);
+        autoRotateTimer = null;
+      }
+    }
+
+    // Observer pour mettre en pause la rotation dès que la section n'est plus visible (économie CPU/GPU)
+    if (canObserve) {
+      const skillsSectionObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          isSkillsInViewport = entry.isIntersecting;
+          if (isSkillsInViewport && window.innerWidth <= 860) {
+            startAutoRotate();
+          } else {
+            stopAutoRotate();
+          }
+        });
+      }, { rootMargin: "80px 0px", threshold: 0.05 });
+      skillsSectionObserver.observe(skillsGrid);
+    } else {
+      isSkillsInViewport = true;
+    }
+
+    function pauseAndGoTo(idx) {
+      isUserInteracting = true;
+      goToSkill(idx);
+      clearTimeout(resumeTimeout);
+      resumeTimeout = window.setTimeout(function () {
+        isUserInteracting = false;
+      }, 5000); // Reprend la rotation automatique après 5s
+    }
+
+    if (skillsPrev) {
+      skillsPrev.addEventListener("click", function () {
+        pauseAndGoTo(currentSkillIndex - 1);
+      });
+    }
+
+    if (skillsNext) {
+      skillsNext.addEventListener("click", function () {
+        pauseAndGoTo(currentSkillIndex + 1);
+      });
+    }
+
+    // Clic sur une carte adjacente pour la faire passer au centre
+    skillsCards.forEach(function (card, idx) {
+      card.addEventListener("click", function () {
+        if (window.innerWidth <= 860 && idx !== currentSkillIndex) {
+          pauseAndGoTo(idx);
+        }
+      });
+    });
+
+    // Support tactile Swipe (glisser du doigt)
+    let touchStartX = 0;
+    let touchStartY = 0;
+    skillsGrid.addEventListener("touchstart", function (e) {
+      isUserInteracting = true;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    skillsGrid.addEventListener("touchend", function (e) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+
+      if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0) {
+          goToSkill(currentSkillIndex - 1);
+        } else {
+          goToSkill(currentSkillIndex + 1);
+        }
+      }
+
+      clearTimeout(resumeTimeout);
+      resumeTimeout = window.setTimeout(function () {
+        isUserInteracting = false;
+      }, 5000);
+    }, { passive: true });
+
+    // Pause au survol de la souris
+    skillsGrid.addEventListener("mouseenter", function () {
+      isUserInteracting = true;
+    });
+    skillsGrid.addEventListener("mouseleave", function () {
+      isUserInteracting = false;
+    });
+
+    // Gestion du responsive
+    window.addEventListener("resize", function () {
+      update3DDeck();
+      if (window.innerWidth <= 860) {
+        startAutoRotate();
+      } else {
+        stopAutoRotate();
+      }
+    });
+
+    // Pause si la fenêtre n'est pas active
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) {
+        stopAutoRotate();
+      } else if (window.innerWidth <= 860) {
+        startAutoRotate();
+      }
+    });
+
+    // Démarrage initial
+    update3DDeck();
+    if (window.innerWidth <= 860) {
+      startAutoRotate();
+    }
+  }
+
 })();
