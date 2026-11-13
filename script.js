@@ -113,13 +113,17 @@
     scrollIdleTimer = 0;
     if (!isActivelyScrolling) return;
     isActivelyScrolling = false;
+    root.classList.remove("is-scrolling");
     scrollEndHandlers.forEach(function (handler) {
       handler();
     });
   }
 
   window.addEventListener("scroll", function () {
-    isActivelyScrolling = true;
+    if (!isActivelyScrolling) {
+      isActivelyScrolling = true;
+      root.classList.add("is-scrolling");
+    }
     window.clearTimeout(scrollIdleTimer);
     scrollIdleTimer = window.setTimeout(
       flushScrollEndHandlers,
@@ -293,10 +297,15 @@
 
   if (quickTop) {
     let ticking = false;
+    let lastQuickTopShown = null;
 
     function setQuickTopState() {
       const threshold = Math.min(720, window.innerHeight * 0.72);
       const shouldShow = window.scrollY > threshold;
+      ticking = false;
+
+      if (shouldShow === lastQuickTopShown) return;
+      lastQuickTopShown = shouldShow;
 
       if (!shouldShow && document.activeElement === quickTop) {
         quickTop.blur();
@@ -305,7 +314,6 @@
       quickTop.classList.toggle("is-visible", shouldShow);
       quickTop.setAttribute("aria-hidden", String(!shouldShow));
       quickTop.tabIndex = shouldShow ? 0 : -1;
-      ticking = false;
     }
 
     function requestQuickTopUpdate() {
@@ -482,6 +490,7 @@
 
     updateProjectCount(activeProjectFilter, matchingCards.length);
     requestPreviewScan();
+    window.setTimeout(prewarmVisibleProjectImages, 120);
   }
 
   filterButtons.forEach(function (button) {
@@ -951,7 +960,7 @@
 
   const pendingVideoPlays = new Set();
 
-  function setVideoState(video, shouldPlay) {
+  function setVideoState(video, shouldPlay, trustedVisible) {
     const carousel = video.closest(".project-carousel");
     const activeSlide = carousel
       ? Array.from(carousel.children).filter(function (slide) {
@@ -961,13 +970,13 @@
     const isActiveSlide = !carousel || activeSlide === video || (activeSlide && activeSlide.contains(video));
 
     if (shouldPlay && !reduceMotion && isActiveSlide &&
-      isMediaNearViewport(video, 180) && !document.body.classList.contains("media-open")) {
+      (trustedVisible || isMediaNearViewport(video, 180)) && !document.body.classList.contains("media-open")) {
       if (isActivelyScrolling) {
         pendingVideoPlays.add(video);
         return;
       }
       pendingVideoPlays.delete(video);
-      loadProjectPreview(video.closest(".project-image"));
+      loadProjectPreview(video.closest(".project-image"), true);
       ensureVideoSource(video);
       const playPromise = video.play();
       if (playPromise !== undefined) {
@@ -1049,13 +1058,12 @@
       carousel.style.transform = "translateX(-" + step * activeIndex + "%)";
       count.textContent = activeIndex + 1 + "/" + slides.length;
       updateMediaButton(projectImage);
-      loadProjectPreview(projectImage);
-
       if (isVisible) {
+        loadProjectPreview(projectImage, true);
         const activeSlide = slides[activeIndex];
-        if (activeSlide.matches("video")) setVideoState(activeSlide, true);
+        if (activeSlide.matches("video")) setVideoState(activeSlide, true, true);
         activeSlide.querySelectorAll("video").forEach(function (video) {
-          setVideoState(video, true);
+          setVideoState(video, true, true);
         });
       }
     }
@@ -1113,9 +1121,9 @@
             if (isVisible) {
               startAuto();
               const activeSlide = slides[activeIndex];
-              if (activeSlide.matches("video")) setVideoState(activeSlide, true);
+              if (activeSlide.matches("video")) setVideoState(activeSlide, true, true);
               activeSlide.querySelectorAll("video").forEach(function (video) {
-                setVideoState(video, true);
+                setVideoState(video, true, true);
               });
             } else {
               stopAuto();
@@ -1173,27 +1181,102 @@
   }
 
   function loadProjectPreview(projectImage, forceInstant) {
-    if (!projectImage) return;
+    if (!projectImage || (!forceInstant && projectImage.closest("[hidden]"))) return;
     if (!forceInstant && !isMediaNearViewport(projectImage, 600)) return;
     const media = getActiveMedia(projectImage);
     if (!media) return;
 
-    if (media.matches("img") && !media.getAttribute("src")) {
-      media.setAttribute("fetchpriority", "high");
-      // Prioritize high-res candidates to prevent blur on retina screens:
-      if (media.dataset.srcset) {
-        media.srcset = media.dataset.srcset.replace(/[^,]*400\.webp\?[^,]*400w,?\s*/g, "");
+    if (media.matches("img")) {
+      media.decoding = "async";
+      if (!media.getAttribute("src")) {
+        // Prioritize high-res candidates to prevent blur on retina screens:
+        if (media.dataset.srcset) {
+          media.srcset = media.dataset.srcset.replace(/[^,]*400\.webp\?[^,]*400w,?\s*/g, "");
+        }
+        const crispSrc = (window.devicePixelRatio >= 1.5 && media.dataset.fullSrc) ? media.dataset.fullSrc : media.dataset.src;
+        if (crispSrc) {
+          media.src = crispSrc;
+        }
       }
-      const crispSrc = (window.devicePixelRatio >= 1.5 && media.dataset.fullSrc) ? media.dataset.fullSrc : media.dataset.src;
-      if (crispSrc) media.src = crispSrc;
+      if (media.getAttribute("src") && !media.dataset.preDecoded && typeof media.decode === "function") {
+        media.dataset.preDecoded = "1";
+        return media.decode().catch(function () {});
+      }
+      return null;
     } else if (media.matches("video")) {
       if (!media.getAttribute("poster") && media.dataset.poster) {
         media.poster = media.dataset.poster;
       }
-      ensureVideoSource(media);
+      if (!isActivelyScrolling) {
+        ensureVideoSource(media);
+      }
     } else if (media.matches("iframe")) {
       updateIframePoster(media);
     }
+    return null;
+  }
+
+  let prewarmQueue = [];
+  let prewarmScheduled = false;
+
+  function drainPrewarmQueue() {
+    prewarmScheduled = false;
+    if (isActivelyScrolling || !prewarmQueue.length) return;
+    const nextMedia = prewarmQueue.shift();
+    let decodePromise = null;
+    if (nextMedia && !nextMedia.dataset.preDecoded && !nextMedia.closest("[hidden]")) {
+      if (!nextMedia.getAttribute("src") && "fetchPriority" in nextMedia) {
+        nextMedia.fetchPriority = "low";
+      }
+      decodePromise = loadProjectPreview(nextMedia.closest(".project-image"), true);
+    }
+    if (prewarmQueue.length) {
+      if (decodePromise && typeof decodePromise.finally === "function") {
+        decodePromise.finally(schedulePrewarm);
+      } else {
+        schedulePrewarm();
+      }
+    }
+  }
+
+  function schedulePrewarm() {
+    if (prewarmScheduled || !prewarmQueue.length) return;
+    prewarmScheduled = true;
+    if (typeof window.requestIdleCallback === "function") {
+      window.requestIdleCallback(drainPrewarmQueue, { timeout: 250 });
+    } else {
+      window.setTimeout(drainPrewarmQueue, 32);
+    }
+  }
+
+  function prewarmVisibleProjectImages() {
+    prewarmQueue = [];
+    projectCards.forEach(function (card) {
+      if (card.hidden) return;
+      const box = card.querySelector(".project-image");
+      const media = box ? getActiveMedia(box) : null;
+      if (media && media.matches("img") && !media.dataset.preDecoded) {
+        prewarmQueue.push(media);
+      }
+    });
+    schedulePrewarm();
+  }
+
+  scrollEndHandlers.push(schedulePrewarm);
+
+  const animatedSections = Array.from(document.querySelectorAll(".hero.section, #skills, #contact, #projects"));
+  if ("IntersectionObserver" in window && animatedSections.length) {
+    const offscreenAnimObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          entry.target.classList.toggle("is-offscreen", !entry.isIntersecting);
+        });
+      },
+      { rootMargin: "220px 0px 220px 0px", threshold: 0.01 }
+    );
+    animatedSections.forEach(function (sec) {
+      offscreenAnimObserver.observe(sec);
+    });
   }
 
   function requestPreviewScan() {
@@ -1291,7 +1374,7 @@
       const videoObserver = new IntersectionObserver(
         function (entries) {
           entries.forEach(function (entry) {
-            setVideoState(entry.target, entry.isIntersecting);
+            setVideoState(entry.target, entry.isIntersecting, entry.isIntersecting);
           });
         },
         { rootMargin: "180px 0px", threshold: 0.12 }
@@ -1370,6 +1453,7 @@
       if (image.dataset.decorationSrcset) image.srcset = image.dataset.decorationSrcset;
       image.src = image.dataset.decorationSrc;
     });
+    window.setTimeout(prewarmVisibleProjectImages, 600);
   }
 
   const heroPhoto = Array.from(document.querySelectorAll(".profile-photo")).find(function (image) {
@@ -1405,7 +1489,12 @@
       if (section) sectionMap.set(section, link);
     });
 
+    let lastActiveSection = null;
+
     function setActiveSection(section) {
+      if (!section || section === lastActiveSection) return;
+      lastActiveSection = section;
+
       summaryLinks.forEach(function (link) {
         const isActive = link === sectionMap.get(section);
         link.classList.toggle("active", isActive);
