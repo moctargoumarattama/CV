@@ -358,7 +358,12 @@
     return firstPriority - secondPriority;
   });
   const projectCount = document.getElementById("project-count");
+  const projectsDock = document.getElementById("projects-dock");
+  const projectsDockStatus = document.getElementById("projects-dock-status");
+  const projectsDockFill = document.getElementById("projects-dock-fill");
   const projectsMore = document.getElementById("projects-more");
+  const projectsMoreLabel = projectsMore ? projectsMore.querySelector(".projects-more-label") : null;
+  const projectsAllBtn = document.getElementById("projects-all");
   const summaryLinks = document.querySelectorAll("[data-section-link]");
   const navSectionLinks = navMenu ? navMenu.querySelectorAll('.nav-menu a[href^="#"]') : [];
   const canObserve = "IntersectionObserver" in window;
@@ -385,9 +390,9 @@
 
   let mediaClickRequired = requiresMediaClick();
   let previewScanFrame = 0;
-  const mobileProjectBatchSize = 7;
+  const projectBatchSize = 6;
   let activeProjectFilter = "all";
-  let visibleProjectLimit = mobileProjectBatchSize;
+  let visibleProjectLimit = projectBatchSize;
   const filterLabels = {
     all: "projets",
     iot: "projets IoT",
@@ -405,18 +410,6 @@
   function getMatchingProjectCards() {
     return Array.from(projectCards).filter(function (card) {
       return projectMatchesFilter(card, activeProjectFilter);
-    });
-  }
-
-  function scrollToProjectBatch(target) {
-    if (!target) return;
-
-    window.requestAnimationFrame(function () {
-      window.requestAnimationFrame(function () {
-        const offset = 92;
-        const top = target.getBoundingClientRect().top + window.scrollY - offset;
-        window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
-      });
     });
   }
 
@@ -473,39 +466,155 @@
       card.hidden = !matchesFilter || isBeyondProjectLimit;
     });
 
-    if (projectsMore) {
-      const canToggle = matchingCards.length > mobileProjectBatchSize;
-      const hasMore = matchingCards.length > visibleProjectLimit;
-      projectsMore.hidden = !canToggle;
-      projectsMore.textContent = hasMore
-        ? "Voir " + mobileProjectBatchSize + " projets de plus"
-        : "Réduire la liste";
-      projectsMore.dataset.state = hasMore ? "more" : "collapse";
-      projectsMore.setAttribute(
-        "aria-label",
-        hasMore ? "Afficher 7 projets de plus" : "Réduire la liste des projets"
-      );
-      projectsMore.setAttribute("aria-expanded", String(!hasMore));
+    const totalMatching = matchingCards.length;
+    const shownCount = Math.min(visibleProjectLimit, totalMatching);
+    const remainingCount = Math.max(0, totalMatching - shownCount);
+    const hasMore = remainingCount > 0;
+    const nextStepCount = Math.min(projectBatchSize, remainingCount);
+    const isLastBatch = hasMore && remainingCount <= projectBatchSize;
+    const canToggle = totalMatching > projectBatchSize;
+
+    if (projectsDock) {
+      projectsDock.hidden = !canToggle;
+      projectsDock.dataset.state = hasMore ? "more" : "collapse";
     }
 
-    updateProjectCount(activeProjectFilter, matchingCards.length);
+    if (projectsDockStatus) {
+      projectsDockStatus.textContent = shownCount + " / " + totalMatching + " réalisations";
+    }
+
+    if (projectsDockFill) {
+      const ratio = totalMatching > 0 ? shownCount / totalMatching : 1;
+      projectsDockFill.style.transform = "scaleX(" + ratio.toFixed(4) + ")";
+    }
+
+    if (projectsMore) {
+      const nextLabel = hasMore
+        ? nextStepCount === 1
+          ? "Voir le dernier projet"
+          : isLastBatch
+            ? "Voir les " + nextStepCount + " derniers"
+            : "Afficher " + nextStepCount + " projets suivants"
+        : "Réduire à l'essentiel (" + projectBatchSize + ")";
+
+      projectsMore.hidden = !canToggle;
+      projectsMore.dataset.state = hasMore ? "more" : "collapse";
+      projectsMore.setAttribute("aria-expanded", String(!hasMore));
+      projectsMore.removeAttribute("aria-label");
+
+      if (projectsMoreLabel) {
+        projectsMoreLabel.textContent = nextLabel;
+      } else {
+        projectsMore.textContent = nextLabel;
+      }
+    }
+
+    if (projectsAllBtn) {
+      projectsAllBtn.hidden = !canToggle || !hasMore || isLastBatch;
+      projectsAllBtn.textContent = "Tout afficher (" + totalMatching + ")";
+    }
+
+    updateProjectCount(activeProjectFilter, totalMatching);
     requestPreviewScan();
     window.setTimeout(prewarmVisibleProjectImages, 120);
   }
 
+  function applyProjectFilter(filter, options) {
+    const nextFilter = filter || "all";
+    const opts = options || {};
+    let activeBtn = null;
+
+    activeProjectFilter = nextFilter;
+    visibleProjectLimit = projectBatchSize;
+
+    filterButtons.forEach(function (item) {
+      const isMatch = (item.dataset.filter || "all") === nextFilter;
+      item.classList.toggle("active", isMatch);
+      item.setAttribute("aria-pressed", String(isMatch));
+      if (isMatch) activeBtn = item;
+    });
+
+    updateProjectLimit();
+
+    projectCards.forEach(function (card) {
+      if (!card.hidden) {
+        card.classList.add("visible");
+      }
+    });
+
+    if (opts.scrollToProjects) {
+      const target = document.querySelector("#projects .project-filters") || document.getElementById("projects");
+      if (target) {
+        const navOffset = 94;
+        const useSmooth = !reduceMotionQuery.matches;
+        const targetTop = target.getBoundingClientRect().top + window.scrollY - navOffset;
+
+        window.scrollTo({
+          top: Math.max(0, targetTop),
+          behavior: useSmooth ? "smooth" : "auto",
+        });
+
+        let settled = false;
+        let fallbackTimer = 0;
+
+        function cancelSettle() {
+          settled = true;
+          window.clearTimeout(fallbackTimer);
+          window.removeEventListener("scrollend", settlePosition);
+          window.removeEventListener("wheel", cancelSettle);
+          window.removeEventListener("touchstart", cancelSettle);
+        }
+
+        function settlePosition() {
+          if (settled) return;
+          cancelSettle();
+          const drift = target.getBoundingClientRect().top - navOffset;
+          if (Math.abs(drift) > 18) {
+            window.scrollBy({
+              top: drift,
+              behavior: useSmooth ? "smooth" : "auto",
+            });
+          }
+        }
+
+        window.addEventListener("wheel", cancelSettle, { passive: true, once: true });
+        window.addEventListener("touchstart", cancelSettle, { passive: true, once: true });
+        window.addEventListener("scrollend", settlePosition, { once: true });
+        fallbackTimer = window.setTimeout(settlePosition, useSmooth ? 950 : 60);
+      }
+      if (activeBtn && opts.focusFilter) {
+        activeBtn.focus({ preventScroll: true });
+      }
+    }
+  }
+
   filterButtons.forEach(function (button) {
     button.addEventListener("click", function () {
-      const filter = button.dataset.filter || "all";
-      activeProjectFilter = filter;
-      visibleProjectLimit = mobileProjectBatchSize;
-
-      filterButtons.forEach(function (item) {
-        item.classList.toggle("active", item === button);
-      });
-
-      updateProjectLimit();
+      applyProjectFilter(button.dataset.filter || "all");
     });
   });
+
+  const skillProofButtons = document.querySelectorAll(".skill-proof-btn[data-skill-filter]");
+  skillProofButtons.forEach(function (button) {
+    button.addEventListener("click", function (event) {
+      const card = button.closest(".skill-card");
+      if (window.innerWidth <= 860 && card && !card.classList.contains("deck-active")) {
+        return;
+      }
+      event.stopPropagation();
+      applyProjectFilter(button.dataset.skillFilter, {
+        scrollToProjects: true,
+        focusFilter: true,
+      });
+    });
+  });
+
+  function revealNewProjectBatch(batchCards) {
+    batchCards.forEach(function (card) {
+      card.classList.add("visible");
+    });
+    animateProjectBatch(batchCards);
+  }
 
   if (projectsMore) {
     projectsMore.addEventListener("click", function () {
@@ -513,19 +622,35 @@
       const previousLimit = visibleProjectLimit;
       const hasMore = matchingCards.length > visibleProjectLimit;
 
-      visibleProjectLimit = hasMore ? visibleProjectLimit + mobileProjectBatchSize : mobileProjectBatchSize;
-      updateProjectLimit();
-
       if (hasMore) {
-        const nextProjectBatch = matchingCards.slice(previousLimit, visibleProjectLimit);
-        nextProjectBatch.forEach(function (card) {
-          card.classList.add("visible");
-        });
-        animateProjectBatch(nextProjectBatch);
-        scrollToProjectBatch(matchingCards[previousLimit]);
+        visibleProjectLimit = Math.min(matchingCards.length, visibleProjectLimit + projectBatchSize);
+        updateProjectLimit();
+        revealNewProjectBatch(matchingCards.slice(previousLimit, visibleProjectLimit));
       } else {
-        scrollToProjectBatch(document.getElementById("projects"));
+        const dockRectBefore = projectsDock ? projectsDock.getBoundingClientRect() : null;
+        visibleProjectLimit = projectBatchSize;
+        updateProjectLimit();
+
+        if (projectsDock && dockRectBefore) {
+          const dockRectAfter = projectsDock.getBoundingClientRect();
+          const deltaY = dockRectAfter.top - dockRectBefore.top;
+          if (Math.abs(deltaY) > 4) {
+            window.scrollBy({ top: deltaY, behavior: "auto" });
+          }
+        }
       }
+    });
+  }
+
+  if (projectsAllBtn) {
+    projectsAllBtn.addEventListener("click", function () {
+      const matchingCards = getMatchingProjectCards();
+      const previousLimit = visibleProjectLimit;
+      if (matchingCards.length <= previousLimit) return;
+
+      visibleProjectLimit = matchingCards.length;
+      updateProjectLimit();
+      revealNewProjectBatch(matchingCards.slice(previousLimit));
     });
   }
 
@@ -1631,7 +1756,7 @@
     }
 
     function update3DDeck() {
-      // Sur écran desktop (> 860px), on désactive le mode 3D pour préserver la grille 4x2
+      // Sur écran desktop (> 860px), on désactive le mode 3D pour préserver la grille 4x1
       if (window.innerWidth > 860) {
         skillsCards.forEach(function (card) {
           card.classList.remove("deck-active", "deck-prev", "deck-next", "deck-hidden-left", "deck-hidden-right");

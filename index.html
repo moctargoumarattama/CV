@@ -949,17 +949,17 @@
 
                 <div class="project-filters reveal" aria-label="Filtrer les projets">
 
-                    <button class="filter-btn active" type="button" data-filter="all">Tous</button>
+                    <button class="filter-btn active" type="button" data-filter="all" aria-pressed="true">Tous</button>
 
-                    <button class="filter-btn" type="button" data-filter="iot">IoT</button>
+                    <button class="filter-btn" type="button" data-filter="iot" aria-pressed="false">IoT</button>
 
-                    <button class="filter-btn" type="button" data-filter="industry">Industrie</button>
+                    <button class="filter-btn" type="button" data-filter="industry" aria-pressed="false">Industrie</button>
 
-                    <button class="filter-btn" type="button" data-filter="ai">IA</button>
+                    <button class="filter-btn" type="button" data-filter="ai" aria-pressed="false">IA</button>
 
-                    <button class="filter-btn" type="button" data-filter="web">Web</button>
+                    <button class="filter-btn" type="button" data-filter="web" aria-pressed="false">Web</button>
 
-                    <button class="filter-btn" type="button" data-filter="energy">Énergie</button>
+                    <button class="filter-btn" type="button" data-filter="energy" aria-pressed="false">Énergie</button>
 
                 </div>
 
@@ -998,7 +998,7 @@
                     </details>
                 </noscript>
 
-                <div class="projects-grid">
+                <div class="projects-grid" id="projects-grid">
 
                     <article class="project-card reveal" data-category="energy web" data-priority="1">
 
@@ -1819,7 +1819,39 @@
 
                 </div>
 
-                <button class="projects-more" id="projects-more" type="button" hidden>Voir 7 projets de plus</button>
+                <div class="projects-dock" id="projects-dock" data-state="more" hidden>
+
+                    <div class="projects-dock-meta">
+
+                        <span class="projects-dock-status" id="projects-dock-status">6 / 23 réalisations</span>
+
+                        <span class="projects-dock-track" aria-hidden="true">
+
+                            <span class="projects-dock-fill" id="projects-dock-fill"></span>
+
+                        </span>
+
+                    </div>
+
+                    <div class="projects-dock-actions">
+
+                        <button class="projects-more" id="projects-more" type="button" aria-controls="projects-grid" aria-expanded="false">
+
+                            <span class="projects-more-label">Afficher 6 projets suivants</span>
+
+                            <svg class="projects-more-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+
+                                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+
+                            </svg>
+
+                        </button>
+
+                        <button class="projects-all-btn" id="projects-all" type="button" aria-controls="projects-grid">Tout afficher (23)</button>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -1837,7 +1869,7 @@
 
                     <h2>Une boîte à outils pensée pour des systèmes complets.</h2>
 
-                    <p class="section-subtitle">Concevoir, connecter, automatiser et analyser.</p>
+                    <p class="section-subtitle">4 pôles complémentaires reliés directement aux réalisations documentées.</p>
 
                 </div>
 
@@ -1849,9 +1881,17 @@
 
                         <h3>IoT &amp; systèmes embarqués</h3>
 
-                        <p>Prototypage connecté, capteurs et acquisition de données.</p>
+                        <p>Prototypage connecté, instrumentation terrain et télémétrie temps réel.</p>
 
-                        <div class="skill-pills"><span>Microcontrôleurs</span><span>Arduino</span><span>Capteurs</span><span>Acquisition</span></div>
+                        <div class="skill-pills"><span>Microcontrôleurs</span><span>Arduino</span><span>Wokwi</span><span>Capteurs</span></div>
+
+                        <button class="skill-proof-btn" type="button" data-skill-filter="iot">
+                            <span>Voir les 4 projets IoT</span>
+                            <svg class="skill-proof-arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M3.5 8h9"></path>
+                                <path d="M8.5 4l4 4-4 4"></path>
+                            </svg>
+                        </button>
 
                     </article>
 
@@ -1859,11 +1899,19 @@
 
                         <span class="skill-index">02</span>
 
-                        <h3>Industrie &amp; automatisation</h3>
+                        <h3>Industrie &amp; automatisme</h3>
 
-                        <p>Logique industrielle, maintenance et suivi de production.</p>
+                        <p>Logique automate PLC, supervision industrielle et maintenance GMAO/GPAO.</p>
 
-                        <div class="skill-pills"><span>TIA Portal</span><span>Automates PLC</span><span>API industriels</span><span>GMAO</span><span>GPAO</span><span>Maintenance</span></div>
+                        <div class="skill-pills"><span>TIA Portal</span><span>Automates PLC</span><span>GMAO / GPAO</span><span>Maintenance</span></div>
+
+                        <button class="skill-proof-btn" type="button" data-skill-filter="industry">
+                            <span>Voir les 3 projets Industrie</span>
+                            <svg class="skill-proof-arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M3.5 8h9"></path>
+                                <path d="M8.5 4l4 4-4 4"></path>
+                            </svg>
+                        </button>
 
                     </article>
 
@@ -1871,11 +1919,19 @@
 
                         <span class="skill-index">03</span>
 
-                        <h3>Énergie HT/BT</h3>
+                        <h3>Énergie HT/BT &amp; solaire</h3>
 
-                        <p>Systèmes électriques, photovoltaïque, éolien et énergie industrielle.</p>
+                        <p>Installations électriques HT/BT, dimensionnement photovoltaïque et suivi de flux.</p>
 
-                        <div class="skill-pills"><span>HT/BT</span><span>Photovoltaïque</span><span>Éolien</span><span>Monitoring</span><span>Dimensionnement</span></div>
+                        <div class="skill-pills"><span>HT/BT</span><span>Photovoltaïque</span><span>Éolien</span><span>Dimensionnement</span></div>
+
+                        <button class="skill-proof-btn" type="button" data-skill-filter="energy">
+                            <span>Voir les 6 projets Énergie</span>
+                            <svg class="skill-proof-arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M3.5 8h9"></path>
+                                <path d="M8.5 4l4 4-4 4"></path>
+                            </svg>
+                        </button>
 
                     </article>
 
@@ -1883,59 +1939,19 @@
 
                         <span class="skill-index">04</span>
 
-                        <h3>Développement &amp; supervision</h3>
+                        <h3>Digital, données &amp; IA</h3>
 
-                        <p>Interfaces, APIs et dashboards pour systèmes connectés.</p>
+                        <p>Applications web/mobile, bases de données, APIs et analyse par vision IA.</p>
 
-                        <div class="skill-pills"><span>Web &amp; Mobile</span><span>Bases de données</span><span>Go</span><span>API</span><span>XAMPP</span><span>VS Code</span><span>GitHub</span></div>
+                        <div class="skill-pills"><span>Web &amp; Mobile</span><span>Bases de données</span><span>Go / API</span><span>IA &amp; Vision</span></div>
 
-                    </article>
-
-                    <article class="skill-card">
-
-                        <span class="skill-index">05</span>
-
-                        <h3>IA et données</h3>
-
-                        <p>Analyse et exploitation des données techniques.</p>
-
-                        <div class="skill-pills"><span>IA</span><span>Données</span><span>Vision IA</span><span>Analyse</span></div>
-
-                    </article>
-
-                    <article class="skill-card">
-
-                        <span class="skill-index">06</span>
-
-                        <h3>CAO / Simulation / Analyse</h3>
-
-                        <p>Conception, modélisation et analyse technique.</p>
-
-                        <div class="skill-pills"><span>AutoCAD</span><span>CATIA</span><span>MATLAB</span><span>LabVIEW</span></div>
-
-                    </article>
-
-                    <article class="skill-card">
-
-                        <span class="skill-index">07</span>
-
-                        <h3>Fabrication mécanique</h3>
-
-                        <p>Atelier, maintenance mécanique et machines-outils industrielles.</p>
-
-                        <div class="skill-pills"><span>Usinage</span><span>3D</span><span>Pièces</span><span>Tour</span><span>Fraiseuse</span></div>
-
-                    </article>
-
-                    <article class="skill-card">
-
-                        <span class="skill-index">08</span>
-
-                        <h3>Gestion &amp; ERP</h3>
-
-                        <p>Bureautique, gestion d'entreprise et outils ERP.</p>
-
-                        <div class="skill-pills"><span>Excel</span><span>Word</span><span>Sage</span><span>Odoo</span><span>ERP</span></div>
+                        <button class="skill-proof-btn" type="button" data-skill-filter="web">
+                            <span>Voir les 12 projets Web &amp; IA</span>
+                            <svg class="skill-proof-arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M3.5 8h9"></path>
+                                <path d="M8.5 4l4 4-4 4"></path>
+                            </svg>
+                        </button>
 
                     </article>
 
@@ -1943,7 +1959,7 @@
 
                 <div class="skills-3d-controls" id="skills-3d-controls" aria-label="Commandes du carrousel de compétences">
                     <button class="skills-nav-btn prev" id="skills-prev" type="button" aria-label="Compétence précédente">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                         <span class="btn-text">Précédent</span>
@@ -1952,14 +1968,14 @@
                     <div class="skills-nav-center">
                         <div class="skills-counter-badge">
                             <span class="skills-pulse-dot" aria-hidden="true"></span>
-                            <span id="skills-counter">01 / 08</span>
+                            <span id="skills-counter">01 / 04</span>
                         </div>
                         <div class="skills-dots" id="skills-dots" role="tablist" aria-label="Indicateurs de compétences"></div>
                     </div>
 
                     <button class="skills-nav-btn next" id="skills-next" type="button" aria-label="Compétence suivante">
                         <span class="btn-text">Suivant</span>
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </button>
@@ -1967,6 +1983,21 @@
 
                 <div class="skills-mobile-hint" aria-hidden="true">
                     <span>Rotation automatique active • Glissez du doigt</span>
+                </div>
+
+                <div class="skills-transverse reveal" aria-label="Outils transverses d'ingénierie et gestion">
+                    <div class="skills-transverse-group">
+                        <span class="skills-transverse-label">CAO &amp; Simulation</span>
+                        <p class="skills-transverse-items">AutoCAD · CATIA · MATLAB · LabVIEW</p>
+                    </div>
+                    <div class="skills-transverse-group">
+                        <span class="skills-transverse-label">Fabrication &amp; Atelier</span>
+                        <p class="skills-transverse-items">Usinage · Tour · Fraiseuse · Pièces 3D</p>
+                    </div>
+                    <div class="skills-transverse-group">
+                        <span class="skills-transverse-label">Environnement Dev &amp; ERP</span>
+                        <p class="skills-transverse-items">Odoo · Sage · Excel · Word · VS Code · XAMPP · GitHub</p>
+                    </div>
                 </div>
 
             </div>
