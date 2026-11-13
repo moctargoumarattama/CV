@@ -101,7 +101,45 @@
 
   if (year) {
     year.textContent = new Date().getFullYear();
-  }    if (pageProgressBar) {
+  }
+
+  let isActivelyScrolling = false;
+  let scrollIdleTimer = 0;
+  const scrollEndHandlers = [];
+  const supportsNativeScrollEnd = "onscrollend" in window;
+
+  function flushScrollEndHandlers() {
+    window.clearTimeout(scrollIdleTimer);
+    scrollIdleTimer = 0;
+    if (!isActivelyScrolling) return;
+    isActivelyScrolling = false;
+    scrollEndHandlers.forEach(function (handler) {
+      handler();
+    });
+  }
+
+  window.addEventListener("scroll", function () {
+    isActivelyScrolling = true;
+    window.clearTimeout(scrollIdleTimer);
+    scrollIdleTimer = window.setTimeout(
+      flushScrollEndHandlers,
+      supportsNativeScrollEnd ? 350 : 120
+    );
+  }, { passive: true });
+
+  if (supportsNativeScrollEnd) {
+    window.addEventListener("scrollend", flushScrollEndHandlers, { passive: true });
+  }
+
+  const supportsScrollTimeline = Boolean(
+    window.CSS &&
+    typeof CSS.supports === "function" &&
+    CSS.supports("animation-timeline: scroll()") &&
+    CSS.supports("animation-range: 0% 100%") &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+
+  if (pageProgressBar && !supportsScrollTimeline) {
       let progressTicking = false;
       let cachedScrollable = 0;
 
@@ -507,10 +545,12 @@
       }
 
       card.addEventListener("pointerenter", function () {
+        if (isActivelyScrolling) return;
         rect = card.getBoundingClientRect();
       });
 
       card.addEventListener("pointermove", function (event) {
+        if (isActivelyScrolling) return;
         if (!rect) rect = card.getBoundingClientRect();
         const x = (event.clientX - rect.left) / rect.width - 0.5;
         const y = (event.clientY - rect.top) / rect.height - 0.5;
@@ -909,6 +949,8 @@
     video.load();
   }
 
+  const pendingVideoPlays = new Set();
+
   function setVideoState(video, shouldPlay) {
     const carousel = video.closest(".project-carousel");
     const activeSlide = carousel
@@ -920,6 +962,11 @@
 
     if (shouldPlay && !reduceMotion && isActiveSlide &&
       isMediaNearViewport(video, 180) && !document.body.classList.contains("media-open")) {
+      if (isActivelyScrolling) {
+        pendingVideoPlays.add(video);
+        return;
+      }
+      pendingVideoPlays.delete(video);
       loadProjectPreview(video.closest(".project-image"));
       ensureVideoSource(video);
       const playPromise = video.play();
@@ -927,9 +974,19 @@
         playPromise.catch(function () {});
       }
     } else {
+      pendingVideoPlays.delete(video);
       video.pause();
     }
   }
+
+  scrollEndHandlers.push(function () {
+    if (!pendingVideoPlays.size) return;
+    const queuedVideos = Array.from(pendingVideoPlays);
+    pendingVideoPlays.clear();
+    queuedVideos.forEach(function (video) {
+      setVideoState(video, true);
+    });
+  });
 
   carousels.forEach(function (carousel) {
     const slides = Array.from(carousel.children).filter(function (slide) {

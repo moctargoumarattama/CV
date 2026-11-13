@@ -468,6 +468,30 @@ body.media-open {
   transform-origin: left;
 }
 
+@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
+  @keyframes pageScrollProgress {
+    from {
+      transform: scaleX(0);
+    }
+
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .page-progress-bar {
+    animation: pageScrollProgress linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0% 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-progress-bar {
+      animation: none;
+    }
+  }
+}
+
 .ambient-system {
   position: fixed;
   inset: 0;
@@ -2535,7 +2559,6 @@ body:not([data-theme="light"]) .cycle-text {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(1.05) contrast(1.04);
   transition: transform 700ms ease, filter 320ms ease;
 }
 
@@ -4013,12 +4036,6 @@ iframe.media-lightbox-media {
     animation-play-state: paused;
   }
 
-  .site-header,
-  .project-card,
-  .project-carousel-controls,
-  .media-open-btn {
-  }
-
   .project-card {
     transform: none;
   }
@@ -5070,11 +5087,11 @@ body::after,
 /* Navigation */
 .site-header {
   height: var(--nav-height);
-  background: rgba(7, 24, 32, 0.84);
+  background: rgba(7, 24, 32, 0.86);
   border-bottom: 1px solid rgba(229, 239, 242, 0.09);
   box-shadow: 0 10px 34px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(18px) saturate(1.2);
-  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  backdrop-filter: blur(12px) saturate(1.12);
+  -webkit-backdrop-filter: blur(12px) saturate(1.12);
 }
 
 [data-theme="light"] .site-header {
@@ -5925,15 +5942,15 @@ h3 {
   object-fit: cover;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
-  filter: contrast(1.04) saturate(1.02);
   transform: translateZ(0);
   backface-visibility: hidden;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
 }
 
 .project-card:hover .project-image img,
 .project-card:hover .project-image video {
   transform: scale(1.035);
+  filter: contrast(1.04) saturate(1.04);
 }
 
 .project-image::after {
@@ -5966,10 +5983,8 @@ h3 {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   user-select: none;
-  background: rgba(15, 23, 42, 0.78);
+  background: rgba(15, 23, 42, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.22);
   color: #f8fafc;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
@@ -6051,10 +6066,8 @@ h3 {
   gap: 4px;
   padding: 4px 6px;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.68);
+  background: rgba(15, 23, 42, 0.86);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
   pointer-events: auto;
 }
@@ -6138,9 +6151,7 @@ h3 {
   white-space: nowrap;
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(15, 23, 42, 0.78);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(15, 23, 42, 0.9);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
   cursor: pointer;
   user-select: none;
@@ -6567,12 +6578,10 @@ h3 {
   gap: 10px;
   padding: 7px 18px;
   border-radius: 999px;
-  background: linear-gradient(145deg, rgba(16, 36, 52, 0.85), rgba(4, 14, 22, 0.95));
+  background: linear-gradient(145deg, rgba(16, 36, 52, 0.94), rgba(4, 14, 22, 0.98));
   border: 1.5px solid rgba(0, 245, 160, 0.45);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 20px rgba(0, 245, 160, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.25);
   margin-bottom: 2.2rem;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   user-select: none;
 }
 
@@ -6650,11 +6659,9 @@ h3 {
   position: relative;
   border-radius: 24px;
   padding: 1.4rem 1.3rem;
-  background: radial-gradient(130% 130% at 0% 0%, rgba(20, 44, 64, 0.7) 0%, rgba(5, 14, 22, 0.96) 100%);
+  background: radial-gradient(130% 130% at 0% 0%, rgba(20, 44, 64, 0.88) 0%, rgba(5, 14, 22, 0.98) 100%);
   border: 1px solid rgba(0, 245, 160, 0.28);
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.18), 0 0 26px rgba(0, 245, 160, 0.08);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -7209,9 +7216,9 @@ h3 {
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.14);
     background:
-      linear-gradient(135deg, rgba(20, 32, 48, 0.78) 0%, rgba(9, 17, 28, 0.86) 100%);
-    backdrop-filter: blur(24px) saturate(160%);
-    -webkit-backdrop-filter: blur(24px) saturate(160%);
+      linear-gradient(135deg, rgba(20, 32, 48, 0.84) 0%, rgba(9, 17, 28, 0.9) 100%);
+    backdrop-filter: blur(10px) saturate(1.15);
+    -webkit-backdrop-filter: blur(10px) saturate(1.15);
     box-shadow:
       0 14px 34px -6px rgba(0, 0, 0, 0.35),
       inset 0 1px 1px rgba(255, 255, 255, 0.22),
@@ -8280,16 +8287,8 @@ html {
 
 @media (max-width: 760px), (hover: none), (pointer: coarse) {
   .site-header {
-    backdrop-filter: blur(12px) saturate(1.12);
-    -webkit-backdrop-filter: blur(12px) saturate(1.12);
-  }
-
-  .project-badge,
-  .media-open-btn,
-  .project-carousel-control,
-  .project-carousel-count {
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(10px) saturate(1.12);
+    -webkit-backdrop-filter: blur(10px) saturate(1.12);
   }
 
   .project-card,
